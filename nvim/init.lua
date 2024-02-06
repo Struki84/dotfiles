@@ -3,11 +3,9 @@ return {
   plugins = {
 
     {
-      "zbirenbaum/copilot.lua",
-      cmd = "Copilot",
-      event = "InsertEnter",
+      'Exafunction/codeium.vim',
+      event = 'BufEnter'
     },
-
     "AstroNvim/astrocommunity",
     { import = "astrocommunity.colorscheme.catppuccin" },
     { import = "astrocommunity.colorscheme.iceberg-vim" },
