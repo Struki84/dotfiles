@@ -1,6 +1,7 @@
 # PATHS
 #############################################
 export PATH=$HOME/bin:/usr/local/bin:$PATH
+export PATH=/Users/simun/.local/bin:$PATH
 
 export PATH=/usr/local/mysql/bin:$PATH
 

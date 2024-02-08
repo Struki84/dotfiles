@@ -15,3 +15,8 @@ alias tg="/Users/Simun/Engineering/TestingGrounds"
 
 alias reload="source ~/.zshrc"
 alias projectile="~/.go/bin/projectile"
+
+alias asai="cd ~/Engineering/Projects/ASAI/SourceCode/Web/"
+
+
+
