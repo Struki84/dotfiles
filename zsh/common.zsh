@@ -8,11 +8,11 @@ alias pip="/usr/bin/pip3"
 ### Navigation shortcuts
 alias ls="ls -l"
 alias lsa="ls -la"
-alias eng="/Users/Simun/Engineering"
-alias pro="/Users/Simun/Engineering/Projects"
-alias libs="/Users/Simun/Engineering/Libraries"
-alias tg="/Users/Simun/Engineering/TestingGrounds"
-alias asai="cd ~/Engineering/Projects/ASAI/SourceCode/Web/"
+alias eng="~/Engineering/"
+alias pro="~/Engineering/Projects/"
+alias libs="~/Engineering/Libraries/"
+alias tg="~/Engineering/TestingGrounds/"
+alias asai="~/Engineering/Projects/ASAI/SourceCode/Web/"
 
 # PATHS
 #############################################
@@ -21,8 +21,8 @@ export PATH=/usr/local/mysql/bin:$PATH
 
 # RBENV
 #############################################
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-eval "$(rbenv init - zsh)"
+# [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# eval "$(rbenv init - zsh)"
 
 # Flutter Configurations
 #############################################
