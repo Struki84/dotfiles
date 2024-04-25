@@ -8,4 +8,5 @@
 # vim.cmd([[luafile ~/.dotfiles/nvim/my_init.lua]])
 # need to install nerd fonts
 # brew tap homebrew/cask-fonts && brew install --cask font-<FONT NAME>-nerd-font || FOR OSX
-
+# install tmux plugin manager: https://github.com/tmux-plugins/tpm
+# git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
