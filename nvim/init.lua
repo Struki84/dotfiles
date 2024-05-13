@@ -18,7 +18,8 @@ return {
     },
     -- add new colors that can be used by heirline
     colors = function(hl)
-      local get_hlgroup = require("astronvim.utils").get_hlgroup -- use helper function to get highlight group properties
+      local get_hlgroup = require("astronvim.utils")
+      .get_hlgroup                                               -- use helper function to get highlight group properties
       local comment_fg = get_hlgroup("Comment").fg
       hl.git_branch_fg = comment_fg
       hl.git_added = comment_fg
@@ -42,6 +43,20 @@ return {
   },
   plugins = {
     {
+      "ray-x/go.nvim",
+      dependencies = { -- optional packages
+        "ray-x/guihua.lua",
+        "neovim/nvim-lspconfig",
+        "nvim-treesitter/nvim-treesitter",
+      },
+      config = function()
+        require("go").setup()
+      end,
+      event = { "CmdlineEnter" },
+      ft = { "go", 'gomod' },
+      build = ':lua require("go.install").update_all_sync()' -- if you need to install/update all binaries
+    },
+    {
       "hrsh7th/nvim-cmp",
       opts = function(_, opts)
         local cmp = require "cmp"
@@ -52,7 +67,7 @@ return {
             vim.fn['codeium#Accept']()
             fallback()
           end
-        end, { "i", "s"})
+        end, { "i", "s" })
       end,
     },
     {
