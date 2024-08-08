@@ -14,32 +14,12 @@
 #!/bin/bash
 DOTFILES_DIR="$HOME/.dotfiles"
 
-# Check if --dry-run flag is used
-DRY_RUN=false
-if [ "$1" == "--dry-run" ]; then
-    DRY_RUN=true
-    echo "Performing a dry run. No changes will be made."
-fi
-
-# Function to handle linking
-link_file() {
-    if [ "$DRY_RUN" = true ]; then
-        echo "[DRY RUN] Would link $1 to $2"
-    else
-        ln -sf "$1" "$2"
-        echo "Linked $1 to $2"
-    fi
-}
-
 # Setup AstroNvim user config
 echo "Setting up AstroNvim user config..."
 if [ -d ~/.config/nvim ]; then
-    if [ "$DRY_RUN" = false ]; then
-        rm -rf ~/.config/nvim/lua/user
-    else
-        echo "[DRY RUN] Would remove ~/.config/nvim/lua/user"
-    fi
-    link_file "$DOTFILES_DIR/nvim/user" ~/.config/nvim/lua/user
+    rm -rf ~/.config/nvim/lua/user
+    ln -s $DOTFILES_DIR/nvim/user ~/.config/nvim/lua/user
+    echo "AstroNvim user config linked."
 else
     echo "AstroNvim not found. Skipping user config setup."
 fi
@@ -47,7 +27,8 @@ fi
 # Setup WezTerm config
 if command -v wezterm &> /dev/null; then
     echo "Setting up WezTerm config..."
-    link_file "$DOTFILES_DIR/term/wezterm.lua" ~/.wezterm.lua
+    ln -sf $DOTFILES_DIR/term/wezterm.lua ~/.wezterm.lua
+    echo "WezTerm config linked."
 else
     echo "WezTerm not found. Skipping config setup."
 fi
@@ -55,7 +36,8 @@ fi
 # Setup Zsh configuration
 if [ -d "$HOME/.oh-my-zsh" ]; then
     echo "Setting up Zsh configuration..."
-    link_file "$DOTFILES_DIR/zsh/setup.zsh" "$HOME/.oh-my-zsh/custom/setup.zsh"
+    ln -sf $DOTFILES_DIR/zsh/setup.zsh $HOME/.oh-my-zsh/custom/setup.zsh
+    echo "Zsh configuration linked."
 else
     echo "Oh My Zsh not found. Skipping Zsh setup."
 fi
@@ -63,7 +45,8 @@ fi
 # Setup tmux configuration
 if command -v tmux &> /dev/null; then
     echo "Setting up tmux configuration..."
-    link_file "$DOTFILES_DIR/tmux/.tmux.conf" "$HOME/.tmux.conf"
+    ln -sf $DOTFILES_DIR/tmux/.tmux.conf $HOME/.tmux.conf
+    echo "Tmux configuration linked."
 else
     echo "Tmux not found. Skipping config setup."
 fi
