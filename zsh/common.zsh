@@ -1,3 +1,9 @@
+add_to_path() {
+  for p in "$@"; do
+    [[ ":$PATH:" != *":$p:"* ]] && PATH="$p:$PATH"
+  done
+}
+
 # ALIASES
 #############################################
 
@@ -16,13 +22,7 @@ alias asai="~/Engineering/Projects/ASAI/SourceCode/Web/"
 
 # PATHS
 #############################################
-export PATH=/usr/local/bin:$PATH
-export PATH=/usr/local/mysql/bin:$PATH
-
-# RBENV
-#############################################
-# [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-# eval "$(rbenv init - zsh)"
+add_to_path /usr/local/bin
 
 # Flutter Configurations
 #############################################
