@@ -25,7 +25,7 @@ else
 fi
 
 # Setup WezTerm config
-if command -v wezterm &> /dev/null; then
+if command -v wezterm &> /dev/null || [ -d "/Applications/WezTerm.app" ]; then
     echo "Setting up WezTerm config..."
     ln -sf $DOTFILES_DIR/term/wezterm.lua ~/.wezterm.lua
     echo "WezTerm config linked."

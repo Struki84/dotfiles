@@ -2,9 +2,16 @@ local wezterm = require 'wezterm'
 local config = {}
 
 config.color_scheme = 'Catppuccin Mocha (Gogh)'
-config.font_size = 10
 config.use_fancy_tab_bar = false
 config.hide_tab_bar_if_only_one_tab = true
+
+-- Set font size based on OS
+if wezterm.target_triple == "x86_64-apple-darwin" or wezterm.target_triple == "aarch64-apple-darwin" then
+  config.font_size = 12
+  config.window_decorations = "RESIZE"   -- Removes title bar on macOS
+else
+  config.font_size = 10                  -- Or whatever size you prefer for other systems
+end
 
 local mux = wezterm.mux
 
@@ -17,10 +24,10 @@ wezterm.on('gui-startup', function()
   local window_size_cache_file = io.open(window_size_cache_path, 'r')
   if window_size_cache_file ~= nil then
     _, _, width, height = string.find(window_size_cache_file:read(), '(%d+),(%d+)')
-    mux.spawn_window{ width = tonumber(width), height = tonumber(height) }
+    mux.spawn_window { width = tonumber(width), height = tonumber(height) }
     window_size_cache_file:close()
   else
-    local tab, pane, window = mux.spawn_window{}
+    local tab, pane, window = mux.spawn_window {}
     window:gui_window():maximize()
   end
 end)
