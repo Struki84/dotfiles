@@ -2,6 +2,14 @@ return {
   "rebelot/heirline.nvim",
   opts = function(_, opts)
     local status = require("astronvim.utils.status")
+
+    opts.tabline = {}
+
+    -- Disable bufferline plugin if installed
+    if pcall(require, 'bufferline') then
+      vim.cmd [[ let g:bufferline = { 'auto_hide': v:true } ]]
+    end
+
     opts.statusline = {
       -- default highlight for the entire statusline
       hl = { fg = "fg", bg = "bg" },
