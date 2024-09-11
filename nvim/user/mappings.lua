@@ -16,11 +16,10 @@ return {
   },
   v = {
     -- visual mode mappings
-
     ["<M-J>"] = { "<C-d>zz", desc = "Move half page down and center" },
     ["<M-K>"] = { "<C-u>zz", desc = "Move half page up and center" },
     ["<M-H>"] = { "^", desc = "Go to beginning of line" },
-    ["<M-l>"] = { "$", desc = "Go to end of line" },
+    ["<M-L>"] = { "$", desc = "Go to end of line" },
   },
   t = {
     -- terminal mode mappings

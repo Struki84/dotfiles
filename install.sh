@@ -45,7 +45,7 @@ fi
 # Setup tmux configuration
 if command -v tmux &> /dev/null; then
     echo "Setting up tmux configuration..."
-    ln -sf $DOTFILES_DIR/tmux/.tmux.conf $HOME/.tmux.conf
+    ln -sf $DOTFILES_DIR/tmux/.tmux.conf $HOME/tmux.conf
     echo "Tmux configuration linked."
 else
     echo "Tmux not found. Skipping config setup."
