@@ -20,6 +20,13 @@ alias libs="~/Engineering/Libraries/"
 alias tg="~/Engineering/TestingGrounds/"
 alias asai="~/Engineering/Projects/ASAI/SourceCode/Web/"
 
+### Git Aliases
+alias gs="git status"
+alias ga="git add"
+alias gcm="git commit -m"
+alias gc="git commit"
+alias gp="git push"
+
 # PATHS
 #############################################
 add_to_path /usr/local/bin
