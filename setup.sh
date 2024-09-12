@@ -51,4 +51,11 @@ else
     echo "Tmux not found. Skipping config setup."
 fi
 
+# Load user secrets
+if [ -f "$HOME/.config/user/secrets" ]; then
+    echo "Loading user secrets..."
+    source $HOME/.config/user/secrets
+else
+    echo "User secrets not found. Skipping user secrets setup."
+fi
 echo "Dotfiles setup complete!"
