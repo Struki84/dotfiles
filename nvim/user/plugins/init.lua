@@ -7,4 +7,5 @@ return {
   require("user.plugins.codeium"),
   require("user.plugins.neo-tree"),
   require("user.plugins.heirline"),
+  require("user.plugins.avante"),
 }
