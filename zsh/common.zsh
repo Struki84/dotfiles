@@ -18,6 +18,7 @@ alias eng="~/Engineering/"
 alias pro="~/Engineering/Projects/"
 alias libs="~/Engineering/Libraries/"
 alias tg="~/Engineering/TestingGrounds/"
+alias web="~/Engineering/WebSites/"
 alias asai="~/Engineering/Projects/ASAI/SourceCode/Web/"
 
 # PATHS
