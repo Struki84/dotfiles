@@ -52,7 +52,7 @@ else
 fi
 
 # Load user secrets
-if [ -f "$HOME/.config/user/secrets" ]; then
+if [ -f "$HOME/.config/user/.secrets" ]; then
     echo "Loading user secrets..."
     source $HOME/.config/user/.secrets
 else
