@@ -23,7 +23,3 @@ add_to_path /usr/local/opt/python/libexec/bin
 add_to_path /Users/simun/Library/Python/3.9/bin
 add_to_path /Users/simun/Library/Python/3.8/bin
 add_to_path /usr/sbin
-
-# Environment variables
-export GEM_HOME=$HOME/.gem
-export GOPATH=$HOME/.go

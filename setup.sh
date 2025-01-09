@@ -14,16 +14,6 @@
 #!/bin/bash
 DOTFILES_DIR="$HOME/.dotfiles"
 
-# Setup AstroNvim user config
-echo "Setting up AstroNvim user config..."
-if [ -d ~/.config/nvim ]; then
-    rm -rf ~/.config/nvim/lua/user
-    ln -s $DOTFILES_DIR/nvim/user ~/.config/nvim/lua/user
-    echo "AstroNvim user config linked."
-else
-    echo "AstroNvim not found. Skipping user config setup."
-fi
-
 # Setup WezTerm config
 if command -v wezterm &> /dev/null || [ -d "/Applications/WezTerm.app" ]; then
     echo "Setting up WezTerm config..."
@@ -36,6 +26,8 @@ fi
 # Setup Zsh configuration
 if [ -d "$HOME/.oh-my-zsh" ]; then
     echo "Setting up Zsh configuration..."
+    rm $HOME/.zshrc
+    ln -sf $DOTFILES_DIR/zsh/zshrc $HOME/.zshrc
     ln -sf $DOTFILES_DIR/zsh/setup.zsh $HOME/.oh-my-zsh/custom/setup.zsh
     echo "Zsh configuration linked."
 else
@@ -51,11 +43,12 @@ else
     echo "Tmux not found. Skipping config setup."
 fi
 
-# Load user secrets
-if [ -f "$HOME/.config/user/.secrets" ]; then
-    echo "Loading user secrets..."
-    source $HOME/.config/user/.secrets
+# Setup AstroNvim user config
+echo "Setting up AstroNvim user config..."
+if [ -d ~/.config/nvim ]; then
+    rm -rf ~/.config/nvim/lua/user
+    ln -s $DOTFILES_DIR/nvim/user ~/.config/nvim/lua/user
+    echo "AstroNvim user config linked."
 else
-    echo "User secrets not found. Skipping user secrets setup."
+    echo "AstroNvim not found. Skipping user config setup."
 fi
-echo "Dotfiles setup complete!"

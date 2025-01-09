@@ -18,7 +18,12 @@ return {
       -- add the vim mode component
       status.component.mode {
         -- enable mode text with padding as well as an icon before it
-        mode_text = { con = { kind = "VimIcon", padding = { right = 1, left = 1 } } },
+        mode_text = {
+          con = {
+            kind = "VimIcon",
+            padding = { right = 1, left = 5 }
+          }
+        },
         -- surround the component with a separators
         surround = {
           -- it's a left element, so use the left separator

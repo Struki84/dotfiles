@@ -4,6 +4,8 @@ add_to_path() {
   done
 }
 
+export GOPATH=$HOME/.go
+
 # ALIASES
 #############################################
 
