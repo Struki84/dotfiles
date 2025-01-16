@@ -13,12 +13,27 @@ config.window_padding = {
   bottom = 0,
 }
 
+
 -- Set font size based on OS
 if wezterm.target_triple == "x86_64-apple-darwin" or wezterm.target_triple == "aarch64-apple-darwin" then
   config.font_size = 12
   config.window_decorations = "RESIZE" -- Removes title bar on macOS
+
+  local border_color = 'rgb(49, 50, 68)'
+
+  -- Add these lines to your config
+  config.window_frame = {
+    border_left_width = '2px',
+    border_right_width = '2px',
+    border_bottom_height = '2px',
+    border_top_height = '2px',
+    border_left_color = border_color, -- Dark border color that matches Catppuccin Mocha
+    border_right_color = border_color,
+    border_bottom_color = border_color,
+    border_top_color = border_color,
+  }
 else
-  config.font_size = 10                -- Or whatever size you prefer for other systems
+  config.font_size = 10 -- Or whatever size you prefer for other systems
 end
 
 local mux = wezterm.mux
