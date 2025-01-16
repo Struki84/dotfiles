@@ -132,6 +132,7 @@
 # sudo install -m 0755 -d /etc/apt/keyrings
 # curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 # sudo chmod a+r /etc/apt/keyrings/docker.gpg
+# sudo usermod -aG docker $USER
 
 # Add the repository to Apt sources
 # echo \
@@ -188,6 +189,12 @@
 # tar xzf v3.45.3.tar.gz
 # mv AstroNvim-3.45.3 ~/.config/nvim
 # 
+# for clipboard support
+# sudo apt install xclip
+#
+# for live grep support
+# curl -LO https://github.com/BurntSushi/ripgrep/releases/download/14.1.0/ripgrep_14.1.0-1_amd64.de
+# sudo dpkg -i ripgrep_14.1.0-1_amd64.deb 
 #
 # Insall yarn and npm
 # sudo apt install yarn npm -y
