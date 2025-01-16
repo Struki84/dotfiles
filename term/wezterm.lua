@@ -13,7 +13,6 @@ config.window_padding = {
   bottom = 0,
 }
 
-
 -- Set font size based on OS
 if wezterm.target_triple == "x86_64-apple-darwin" or wezterm.target_triple == "aarch64-apple-darwin" then
   config.font_size = 12
