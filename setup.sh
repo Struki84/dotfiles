@@ -46,8 +46,8 @@ fi
 # Setup AstroNvim user config
 echo "Setting up AstroNvim user config..."
 if [ -d ~/.config/nvim ]; then
-    rm -rf ~/.config/nvim/lua/user
-    ln -s $DOTFILES_DIR/nvim/user ~/.config/nvim/lua/user
+    rm -rf ~/.config/nvim
+    ln -s $DOTFILES_DIR/nvim ~/.config/nvim
     echo "AstroNvim user config linked."
 else
     echo "AstroNvim not found. Skipping user config setup."
