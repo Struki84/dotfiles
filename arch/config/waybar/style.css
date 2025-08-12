@@ -1,0 +1,54 @@
+* {
+    font-size:15px;
+    font-family: "Roboto Regular", sans-serif;
+    font-weight: 400;
+}
+
+window#waybar{
+    all:unset;
+}
+
+.modules-left, .modules-center, .modules-right  {
+    padding:0px 8px 0px 8px;
+    border-radius:5px;
+    background: alpha(#000, .45);
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, .6);
+}
+
+.modules-left {
+    margin:10px 0px 0px 10px;
+}
+
+.modules-center {
+    margin:10px 0px 0px 0px;
+}
+
+.modules-right {
+    margin: 10px 10px 0px 0px;
+}
+
+tooltip {
+    background:#000;
+    color: #fff;
+}
+
+#taskbar button {
+    padding: 0px 8px 0px 8px;
+    margin: 0px;
+}
+
+#workspaces button {
+    all:unset;
+    padding: 0px 8px;
+    margin: 0;
+    border: none;
+    background: transparent;
+    color: white;
+}
+
+#workspaces button:hover {
+    color:rgba(0,0,0,0);
+    border: none;
+    text-shadow: 0px 0px 1.5px rgba(0, 0, 0, .5);
+    transition: all 1s ease;
+}
