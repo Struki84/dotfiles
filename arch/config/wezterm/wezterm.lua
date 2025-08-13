@@ -4,16 +4,18 @@ local config = {}
 config.color_scheme = 'Catppuccin Mocha (Gogh)'
 config.use_fancy_tab_bar = false
 config.hide_tab_bar_if_only_one_tab = true
-config.window_background_opacity = 0.95
-config.window_decorations = "RESIZE"
-config.font_size = 10
+config.window_decorations = "NONE" -- No title bar, no buttons
+config.enable_tab_bar = false
 
 config.window_padding = {
-  left = 2,
+  left = 0,
   right = 0,
-  top = 2,
+  top = 5,
   bottom = 0,
 }
 
+config.enable_wayland = false
+config.font_size = 10
+config.default_prog = { '/bin/zsh', '-l' }
 
 return config
