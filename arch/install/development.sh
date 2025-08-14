@@ -2,7 +2,7 @@
 
 # Install core shell tools
 yay -S --nonconfirm --needed \
-  curl zsh eza-git\
+  wget curl zsh eza-git\
   wezterm-git tmux-git nvim \
   imagemagick github-cli lazygit lazydocker-git
 
