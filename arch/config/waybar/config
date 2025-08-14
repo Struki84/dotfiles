@@ -23,9 +23,16 @@
     "modules-right": [
       "tray",
       "pulseaudio",
-      "clock",
-      "custom/notifications"
-    ]
+      "group/cc"
+    ],
+
+    "group/cc": {
+      "orientation": "horizontal",
+      "modules": [
+        "clock",
+        "custom/notifications"
+      ]
+    }
   },
   
   {
@@ -42,12 +49,9 @@
     ],
 
     "modules-left": [
-      "cpu",
-      "temperature#cpu",
-      "custom/gpu-temp",
-      "memory", 
-      "disk",
-      "network#speed",
+      "group/processor",
+      "group/hw",
+      "group/net"
     ],
 
     "modules-center": [
@@ -56,6 +60,30 @@
 
     "modules-right": [
       "hyprland/workspaces"
-    ]
+    ],
+
+    "group/processor": {
+      "orientation": "horizontal",
+      "modules": [
+        "cpu",
+        "temperature#cpu",
+        "custom/gpu-temp"
+      ]
+    },
+
+    "group/hw": {
+      "orientation": "horizontal",
+      "modules": [
+        "memory",
+        "disk"
+      ]
+    },
+    
+    "group/net": {
+      "orientation": "horizontal",
+      "modules": [
+        "network#speed"
+      ]
+    }
   }
 ]
