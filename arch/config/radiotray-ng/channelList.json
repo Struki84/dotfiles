@@ -1,0 +1,71 @@
+{ "channels":[
+	{
+	"id": "d14fdd6e-1ff9-4612-bc39-dd6fbe96aded",
+	"name": "Yammat FM",
+	"address": "https://stream.yammat.fm/radio/8000/yammat.mp3",
+	"favourite": true,
+	"encoding": false
+},	{
+	"id": "d0db5374-9052-49f5-9cba-e0444e7831e4",
+	"name": "Radio 808",
+	"address": "http://stream.radio808.info:8003/",
+	"favourite": true,
+	"encoding": false
+},	{
+	"id": "556362c0-5237-45c9-8b80-da8b0fa6a650",
+	"name": "Radio Sljeme",
+	"address": "http://23623.live.streamtheworld.com:80/PROGRAM1AAC_SC\r",
+	"favourite": true,
+	"encoding": false
+},	{
+	"id": "e53ad736-85ac-482f-ae63-0973a7f7d9dc",
+	"name": "Radio Student",
+	"address": "http://161.53.122.184:8000/AAC128.aac",
+	"favourite": true,
+	"encoding": false
+},	{
+	"id": "9f10ff15-beb7-46d2-98ef-b48be706310b",
+	"name": "Top Radio",
+	"address": "https://c5.hostingcentar.com/streams/topradio/",
+	"favourite": true,
+	"encoding": false
+},	{
+	"id": "a941cb9b-3e9b-42d3-9ac9-25a70f4d6bbb",
+	"name": "Radio 101",
+	"address": "http://live.radio101.hr:9531/",
+	"favourite": true,
+	"encoding": false
+},	{
+	"id": "cbcd65e9-1ffb-4682-9ffc-4ad89837297a",
+	"name": "BBC Radio 6 Music",
+	"address": "http://lstn.lv/bbcradio.m3u8?station=bbc_6music%22&bitrate=320000%22",
+	"favourite": true,
+	"encoding": false
+},	{
+	"id": "61d6edf0-54e4-4732-82c7-35e0128cd723",
+	"name": "Smooth Jazz",
+	"address": "http://vip2.fastcast4u.com/proxy/sjcd109?mp=/1",
+	"favourite": true,
+	"encoding": false
+},	{
+	"id": "892114bb-d849-46c1-a280-d75336bbeb36",
+	"name": "Funky Ass Tunes",
+	"address": "http://ams1.reliastream.com:7046/funkyasstunes",
+	"favourite": true,
+	"encoding": false
+},	{
+	"id": "290fb517-6767-4700-8106-9a0984dc2f8e",
+	"name": "Classic JAZZ",
+	"address": "http://jfm1.hostingradio.ru:14536/ijstream.mp3",
+	"favourite": true,
+	"encoding": false
+}
+],
+
+  "lastplayed":{
+	"id": "d14fdd6e-1ff9-4612-bc39-dd6fbe96aded",
+	"name": "Yammat FM",
+	"address": "https://stream.yammat.fm/radio/8000/yammat.mp3",
+	"encoding": false
+}
+}
