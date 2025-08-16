@@ -1,6 +1,6 @@
 #!/bin/bash
 
-yay -S --nonconfirm --needed \
+yay -S --noconfirm --needed \
   networkmanager  blueman-manager bluez-utils pavucontrol \
   swaync wlogout gnome-calendar nautilus sushi ffmpegthumbnailer \
   slurp satty mpv evince imv wf-recorder \

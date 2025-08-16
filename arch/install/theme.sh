@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # Install fonts and gtk theme
-yay -S --nonconfirm --needed \
+yay -S --noconfirm --needed \
   ttf-dejavu ttf-liberation ttf-font-awesome \
   noto-fonts noto-fonts-emoji \
   ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols-mono \

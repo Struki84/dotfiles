@@ -1,11 +1,33 @@
 #!/bin/bash
 
 # Install core shell tools
-yay -S --nonconfirm --needed \
+yay -S --noconfirm --needed \
   xclip ripgrep fzf zoxide fd \
   wget curl zsh eza-git\
   wezterm-git tmux-git nvim \
-  imagemagick github-cli lazygit lazydocker-git
+  imagemagick github-cli lazygit lazydocker-git \
+  docker docker-compose docker-buildx
+
+# Configure docker
+
+# Limit log size to avoid running out of disk
+sudo mkdir -p /etc/docker
+echo '{"log-driver":"json-file","log-opts":{"max-size":"10m","max-file":"5"}}' | sudo tee /etc/docker/daemon.json
+
+# Start Docker automatically
+sudo systemctl enable docker
+
+# Give this user privileged Docker access
+sudo usermod -aG docker ${USER}
+
+# Prevent Docker from preventing boot for network-online.target
+sudo mkdir -p /etc/systemd/system/docker.service.d
+sudo tee /etc/systemd/system/docker.service.d/no-block-boot.conf <<'EOF'
+[Unit]
+DefaultDependencies=no
+EOF
+
+sudo systemctl daemon-reload
 
 # Install oh-my-zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
@@ -27,5 +49,3 @@ git config --global user.name Simun Strukan
 
 # Set zsh as defualt shell
 chsh -s /bin/zsh
-
-

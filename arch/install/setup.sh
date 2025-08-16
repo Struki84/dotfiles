@@ -40,7 +40,7 @@ sudo systemctl disable systemd-networkd-wait-online.service
 sudo systemctl mask systemd-networkd-wait-online.service
 
 # Copy the custom config files
-cp -R "~/.local/share/.dotfiles/arch/config/* ~/.config/"
+cp -R ~/.local/share/dotfiles/arch/config/* ~/.config/
 
 # Ensure application directory exists for update-desktop-database
 mkdir -p ~/.local/share/applications
