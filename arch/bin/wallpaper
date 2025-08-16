@@ -4,7 +4,7 @@ if ! pgrep -x "hyprpaper" > /dev/null; then
     hyprpaper &
     sleep 1
 fi
-wallpaper=$(find ~/pictures/wallpapers -type f -iname "*.jpg" -o -iname "*.png" | while read -r file; do echo -en "img:$file\n"; done | wofi -c ~/.config/wofi/wallpaper -s ~/.config/wofi/style-wallpaper.css --show dmenu --prompt "select wallpaper:" -n)
+wallpaper=$(find ~/Pictures/Wallpapers -type f -iname "*.jpg" -o -iname "*.png" | while read -r file; do echo -en "img:$file\n"; done | wofi -c ~/.config/wofi/wallpaper -s ~/.config/wofi/style-wallpaper.css --show dmenu --prompt "select wallpaper:" -n)
 if [ -n "$wallpaper" ]; then
     wallpaper=$(echo "$wallpaper" | sed 's/^img://')
     magick "$wallpaper" -crop 2560x1440+0+0 ~/.config/hypr/wallpaper/left.jpg
