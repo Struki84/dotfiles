@@ -9,6 +9,7 @@ if [ -n "$wallpaper" ]; then
     wallpaper=$(echo "$wallpaper" | sed 's/^img://')
     magick "$wallpaper" -crop 2560x1440+0+0 ~/.config/hypr/wallpaper/left.jpg
     magick "$wallpaper" -crop 2560x1440+2560+0 ~/.config/hypr/wallpaper/right.jpg
+    
     : > ~/.config/hypr/hyprpaper.conf
     hyprctl hyprpaper unload all
     hyprctl hyprpaper preload "~/.config/hypr/wallpaper/left.jpg"

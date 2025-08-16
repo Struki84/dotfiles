@@ -94,8 +94,8 @@ window {
 #entry:selected {
     box-shadow: 1px 1px 5px rgba(255,255,255, .03);
     border: none;
-    border-radius: 20px;
-    background-color:transparent;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.2);
 }
 #entry:selected #text {
     color: @mauve;
