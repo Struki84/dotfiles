@@ -1,7 +1,7 @@
 #!/bin/bash
 
 yay -S --noconfirm --needed \
-  networkmanager network-manager-applet nm-connection-editor \ 
+  networkmanager network-manager-applet nm-connection-editora \
   bluez bluez-utils blueman pavucontrol \
   swaync wlogout gnome-calendar nautilus sushi ffmpegthumbnailer \
   slurp satty mpv evince imv wf-recorder imagemagick \
