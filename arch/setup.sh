@@ -18,10 +18,13 @@ echo -e "\n Installing yay, build tools and preforming installation setup..."
 source $INSTALL/setup.sh
 
 # Install desktop
+echo -e "\n Setting up desktop..."
 source $INSTALL/desktop.sh
+echo -e "\n Applying desktop theme"
 source $INSTALL/theme.sh
 
 # Install terminal & development tools
+echo -e "\n Installing development env..."
 source $INSTALL/development.sh
 
 # Installing applications

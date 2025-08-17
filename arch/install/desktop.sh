@@ -1,7 +1,7 @@
 #!/bin/bash
 
 yay -S --noconfirm --needed \
-  networkmanager network-manager-applet nm-connection-editora \
+  networkmanager network-manager-applet nm-connection-editor \
   bluez bluez-utils blueman pavucontrol \
   swaync wlogout gnome-calendar nautilus sushi ffmpegthumbnailer \
   slurp satty mpv evince imv wf-recorder imagemagick \
@@ -15,10 +15,10 @@ yay -S --noconfirm --needed \
   
 
 # Start bluetooth
-sudo systemctl enable --now bluetooth.service
+# sudo systemctl enable --now bluetooth.service
 
 # Start Network Manager
-sudo systemctl enable --now NetworkManager
+# sudo systemctl enable --now NetworkManager
 
 update-desktop-database ~/.local/share/applications
 
