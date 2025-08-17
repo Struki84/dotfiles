@@ -12,7 +12,7 @@
 
 
 #!/bin/bash
-DOTFILES_DIR="$HOME/.dotfiles"
+DOTFILES_DIR="$HOME/.local/share/dotfiles/popos/"
 
 # Setup WezTerm config
 if command -v wezterm &> /dev/null || [ -d "/Applications/WezTerm.app" ]; then

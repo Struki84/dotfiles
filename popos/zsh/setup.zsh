@@ -1,8 +1,8 @@
-source ~/.dotfiles/zsh/common.zsh
+source ~/.local/share/dotfiles/popos/zsh/common.zsh
 
 if [[ "$(uname -s)" == "Darwin" ]]; then
-    source ~/.dotfiles/zsh/macos.zsh
+    source ~/.local/share/dotfiles/popos/zsh/macos.zsh
 elif [[ "$(uname -s)" == "Linux" ]]; then
-    source ~/.dotfiles/zsh/linux.zsh
+    source ~/.local/share/dotfiles/popos/zsh/linux.zsh
 fi
 
