@@ -10,11 +10,10 @@ yay -S --noconfirm --needed \
 
 # Unzip the icons that are included with with the dotiles
 mkdir ~/.local/share/icons
-tar -xvf ~/.local/share/dotfiles/arch/icons/Vivid-Glassy-Dark-Icons.tar.gz
-mv ~/.local/share/dotfiles/arch/icons/Vivid-Glassy-Dark-Icons ~/.local/share/icons
+tar -xvf ~/.local/share/dotfiles/arch/icons/Vivid-Glassy-Dark-Icons.tar.gz -C ~/.local/share/icons
 
 # Setup the wallpapers
-mkdir ~/Pictures/Wallpapers
+mkdir -p ~/Pictures/Wallpapers
 cp -R ~/.local/share/dotfiles/wallpapers/* ~/Pictures/Wallpapers/
 
 wallpaper=~/.local/share/dotfiles/wallpapers/wallpaper-1.jpg
@@ -22,11 +21,16 @@ wallpaper=~/.local/share/dotfiles/wallpapers/wallpaper-1.jpg
 magick "$wallpaper" -crop 2560x1440+0+0 ~/.config/hypr/wallpaper/left.jpg
 magick "$wallpaper" -crop 2560x1440+2560+0 ~/.config/hypr/wallpaper/right.jpg
 
+if ! pgrep -x "hyprpaper" > /dev/null; then 
+	hyprpaper &
+	sleep 1
+fi
+
 hyprctl hyprpaper unload all
 hyprctl hyprpaper preload "~/.config/hypr/wallpaper/left.jpg"
 hyprctl hyprpaper preload "~/.config/hypr/wallpaper/right.jpg"
-hyprctl hyprpaper wallpaper "dp-2,~/.config/hypr/wallpaper/left.jpg"
-hyprctl hyprpaper wallpaper "dp-3,~/.config/hypr/wallpaper/right.jpg"
+hyprctl hyprpaper wallpaper "DP-2,~/.config/hypr/wallpaper/left.jpg"
+hyprctl hyprpaper wallpaper "DP-3,~/.config/hypr/wallpaper/right.jpg"
 
 # Setup the theme and fonts for all gtk based apps
 gsettings set org.gnome.desktop.interface gtk-theme 'Flat-Remix-GTK-Cyan-Darkest'

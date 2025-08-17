@@ -1,13 +1,16 @@
 #!/bin/bash
 
 yay -S --noconfirm --needed \
-  networkmanager  blueman-manager bluez-utils pavucontrol \
+  networkmanager network-manager-applet nm-connection-editor \ 
+  blueman-manager bluez-utils pavucontrol \
   swaync wlogout gnome-calendar nautilus sushi ffmpegthumbnailer \
-  slurp satty mpv evince imv wf-recorder \
+  slurp satty mpv evince imv wf-recorder imagemagick \
   btop fastfetch wl-clip-persist \
   waybar hyprpaper hyprpicker hyprshot hyprlock hypridle \
-  walker-bin libqalculate swayosd \
-  xdg-desktop-portal-hyprland xdg-desktop-portal-gtk
+  walker-bin libqalculate swayosd radiotray-ng-git \
+  xdg-desktop-portal-hyprland xdg-desktop-portal-gtk \
+  gst-plugins-base gst-plugins-good gst-plugins-bad \
+  gst-plugins-ugly gst-libav
   
 
 # Start bluetooth

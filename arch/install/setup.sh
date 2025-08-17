@@ -1,4 +1,5 @@
 #!/bin/bash
+echo "script path: $PATH" >&2
 
 sudo pacman -Sy --noconfirm --needed git
 
@@ -16,12 +17,13 @@ if ! command -v yay &>/dev/null; then
   cd ~
 fi
 
+# I screwed this up, and just c/p from omarchy without checking the paths...:facepalm
 # Setup GPG configuration with multiple keyservers for better reliability
-sudo mkdir -p /etc/gnupg
-sudo cp ~/.local/share/omarchy/default/gpg/dirmngr.conf /etc/gnupg/
-sudo chmod 644 /etc/gnupg/dirmngr.conf
-sudo gpgconf --kill dirmngr || true
-sudo gpgconf --launch dirmngr || true
+# sudo mkdir -p /etc/gnupg
+# sudo cp ~/.local/share/omarchy/default/gpg/dirmngr.conf /etc/gnupg/
+# sudo chmod 644 /etc/gnupg/dirmngr.conf
+# sudo gpgconf --kill dirmngr || true
+# sudo gpgconf --launch dirmngr || true
 
 # Add fun and color to the pacman installer
 if ! grep -q "ILoveCandy" /etc/pacman.conf; then

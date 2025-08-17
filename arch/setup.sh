@@ -10,7 +10,7 @@ catch_errors() {
 
 trap catch_errors ERR
 
-export PATH="$HOME/.local/share/dotfiles/bin"
+export PATH="$HOME/.local/share/dotfiles/arch/bin:$PATH"
 INSTALL=~/.local/share/dotfiles/arch/install
 
 # Installation setup

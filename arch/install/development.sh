@@ -5,7 +5,7 @@ yay -S --noconfirm --needed \
   xclip ripgrep fzf zoxide fd \
   wget curl zsh eza-git\
   wezterm-git tmux-git nvim \
-  imagemagick github-cli lazygit lazydocker-git \
+  github-cli lazygit lazydocker-git \
   docker docker-compose docker-buildx
 
 # Configure docker
