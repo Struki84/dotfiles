@@ -2,7 +2,7 @@
 
 yay -S --noconfirm --needed \
   networkmanager network-manager-applet nm-connection-editor \ 
-  blueman-manager bluez-utils pavucontrol \
+  bluez bluez-utils blueman pavucontrol \
   swaync wlogout gnome-calendar nautilus sushi ffmpegthumbnailer \
   slurp satty mpv evince imv wf-recorder imagemagick \
   btop fastfetch wl-clip-persist \
@@ -10,7 +10,8 @@ yay -S --noconfirm --needed \
   walker-bin libqalculate swayosd radiotray-ng-git \
   xdg-desktop-portal-hyprland xdg-desktop-portal-gtk \
   gst-plugins-base gst-plugins-good gst-plugins-bad \
-  gst-plugins-ugly gst-libav
+  gst-plugins-ugly gst-libav \
+  brave-bin
   
 
 # Start bluetooth
