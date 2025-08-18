@@ -5,8 +5,8 @@ yay -S --noconfirm --needed \
   xclip ripgrep fzf zoxide fd \
   wget curl zsh eza-git\
   wezterm-git tmux-git nvim \
-  github-cli lazygit lazydocker-git \
-  docker docker-compose docker-buildx
+  docker docker-compose docker-buildx \
+  github-cli lazygit lazydocker-git
 
 # Configure docker
 
@@ -29,8 +29,15 @@ EOF
 
 sudo systemctl daemon-reload
 
+# Secrets file placeholder so zsh can load
+mkdir -p ~/.config/user
+touch ~/.config/user/.secrets
+
 # Install oh-my-zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+# Instal p10k shell
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k 
 
 # Install zsh plugins
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
