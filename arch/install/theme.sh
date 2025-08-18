@@ -32,11 +32,14 @@ hyprctl hyprpaper preload "~/.config/hypr/wallpaper/right.jpg"
 hyprctl hyprpaper wallpaper "DP-2,~/.config/hypr/wallpaper/left.jpg"
 hyprctl hyprpaper wallpaper "DP-3,~/.config/hypr/wallpaper/right.jpg"
 
+cp -r /usr/share/themes/Flat-Remix-GTK-Cyan-Darkest/gtk-4.0/* ~/.config/gtk-4.0/
+
 # Setup the theme and fonts for all gtk based apps
 gsettings set org.gnome.desktop.interface gtk-theme 'Flat-Remix-GTK-Cyan-Darkest'
 gsettings set org.gnome.desktop.interface icon-theme 'Vivid-Glassy-Dark-Icons'
 gsettings set org.gnome.desktop.interface font-name 'Roboto Regular 11'
-gsettings set org.gnome.desktop.interfacev color-scheme 'prefer-dark'
+gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+
 
 # Set SDDM Astronaut theme as default
 echo "[Theme]
