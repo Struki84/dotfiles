@@ -6,7 +6,7 @@ yay -S --noconfirm --needed \
   wget curl zsh eza-git\
   wezterm-git tmux-git nvim \
   docker docker-compose docker-buildx \
-  github-cli lazygit lazydocker-git
+  github-cli lazygit #lazydocker-git
 
 # Configure docker
 
