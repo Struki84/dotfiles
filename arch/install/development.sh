@@ -3,7 +3,7 @@
 # Install core shell tools
 yay -S --noconfirm --needed \
   xclip ripgrep fzf zoxide fd \
-  wget curl zsh eza-git\
+  wget curl zsh eza-git mise \
   wezterm-git tmux-git nvim \
   docker docker-compose docker-buildx \
   github-cli lazygit #lazydocker-git
