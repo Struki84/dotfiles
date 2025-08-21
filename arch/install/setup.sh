@@ -25,6 +25,8 @@ fi
 # sudo gpgconf --kill dirmngr || true
 # sudo gpgconf --launch dirmngr || true
 
+mkdir -p $XDG_RUNTIME_DIR/keyring
+
 # Add fun and color to the pacman installer
 if ! grep -q "ILoveCandy" /etc/pacman.conf; then
   sudo sed -i '/^\[options\]/a Color\nILoveCandy' /etc/pacman.conf

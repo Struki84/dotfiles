@@ -2,10 +2,12 @@
 
 yay -S --noconfirm --needed \
   networkmanager network-manager-applet nm-connection-editor \
+  gnome-online-accounts gnome-control-center evolution-data-server \
+  gnome-keyring libsecret\
   bluez bluez-utils blueman pavucontrol \
   swaync wlogout gnome-calendar nautilus sushi ffmpegthumbnailer \
   slurp satty mpv evince imv wf-recorder imagemagick \
-  btop fastfetch wl-clip-persist \
+  btop fastfetch wl-clip-persist libsecret \
   waybar hyprpaper hyprpicker hyprshot hyprlock hypridle \
   walker-bin libqalculate swayosd radiotray-ng-git \
   xdg-desktop-portal-hyprland xdg-desktop-portal-gtk \
