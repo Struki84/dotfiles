@@ -3,7 +3,7 @@
 yay -S --noconfirm --needed \
   networkmanager network-manager-applet nm-connection-editor \
   gnome-online-accounts gnome-control-center evolution-data-server \
-  gnome-keyring libsecret\
+  gnome-keyring libsecret inotify-tools \
   bluez bluez-utils blueman pavucontrol \
   swaync wlogout gnome-calendar nautilus sushi ffmpegthumbnailer \
   slurp satty mpv evince imv wf-recorder imagemagick \
