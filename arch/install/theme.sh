@@ -40,7 +40,6 @@ gsettings set org.gnome.desktop.interface icon-theme 'Vivid-Glassy-Dark-Icons'
 gsettings set org.gnome.desktop.interface font-name 'Roboto Regular 11'
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 
-
 # Set SDDM Astronaut theme as default
 echo "[Theme]
 Current=sddm-astronaut-theme" | sudo tee /etc/sddm.conf
