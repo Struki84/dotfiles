@@ -1,0 +1,124 @@
+#item,
+#text,
+#label,
+#sub,
+#activationlabel
+child,
+#list,
+#typehead,
+#input,
+#prompt,
+#clear,
+#box,
+#window {
+  all: unset;
+}
+
+#window {
+  background: alpha(#000, 0,6);
+  color: #fff;
+}
+
+/* Main box container */
+#box {
+  background: alpha(#000, 0.6);
+  padding: 20px;
+  border-radius: 5px;
+  border: none;
+}
+
+/* Search container */
+#search {
+  background: transparent;
+  margin-bottom: 10px;
+  height: 120px;
+}
+
+/* Hide prompt icon */
+#prompt {
+  opacity: 0;
+  min-width: 0;
+  margin: 0;
+}
+
+/* Hide clear button */
+#clear {
+  opacity: 0;
+  min-width: 0;
+}
+
+/* Input field */
+#input {
+  background: #000;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+#input placeholder {
+  opacity: 0.5;
+  color: #fff;
+}
+
+/* Hide typeahead */
+#typeahead {
+  opacity: 0;
+}
+
+/* List */
+#list {
+  background: transparent;
+}
+
+/* List items */
+child {
+  padding: 0px 12px;
+  background: transparent;
+  border-radius: 0;
+}
+
+child:selected,
+child:hover {
+  background: #000;
+  border-radius: 5px;
+}
+
+/* Item layout */
+#item {
+  padding: 0;
+}
+
+#item.active {
+  font-style: italic;
+}
+
+/* Icon */
+#icon {
+  margin-right: 10px;
+  -gtk-icon-transform: scale(0.7);
+}
+
+/* Text */
+#text {
+  color: @#fff;
+  padding: 14px 0;
+}
+
+#label {
+  font-weight: normal;
+}
+
+/* Hide sub text */
+#sub {
+  opacity: 0;
+  font-size: 0;
+  min-height: 0;
+}
+
+/* Hide activation label */
+#activationlabel {
+  opacity: 0;
+  min-width: 0;
+}
+
+
