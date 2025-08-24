@@ -3,24 +3,19 @@
     "positionX": "right",
     "positionY": "top",
     "cssPriority": "user",
-    
     "control-center-width": 380,
     "control-center-height": 1600,
-    "control-center-margin-top": 8,
-    "control-center-margin-bottom": 8,
-    "control-center-margin-right": 0,
+    "control-center-margin-top": 10,
+    "control-center-margin-bottom": 10,
+    "control-center-margin-right": 10,
     "control-center-margin-left": 8,
-
-    
     "notification-window-width": 350,
     "notification-icon-size": 48,
-    "notification-body-image-height":  180,
+    "notification-body-image-height": 180,
     "notification-body-image-width": 180,
-    
     "timeout": 12,
     "timeout-low": 6,
     "timeout-critical": 1,
-    
     "fit-to-screen": false,
     "keyboard-shortcuts": true,
     "image-visibility": "when-available",
@@ -28,15 +23,13 @@
     "hide-on-clear": false,
     "hide-on-action": true,
     "script-fail-notify": true,
-    
     "widgets": [
-        "volume",
         "buttons-grid",
         "title",
         "notifications",
+        "volume",
         "mpris"
     ],
-    
     "widget-config": {
         "title": {
             "text": "Notification Center",
@@ -44,10 +37,9 @@
             "button-text": "󰆴"
         },
         "label": {
-            "max-lines":1,
+            "max-lines": 1,
             "text": "Notification Center!"
         },
-
         "mpris": {
             "image-size": 80,
             "image-radius": 0
@@ -59,33 +51,19 @@
             "buttons-per-row": 3,
             "actions": [
                 {
-                    "label": "󰀟",
-                    "command": "gnome-network-displays"
-                },
-                {
-                    "label": "",
-                    "command": "kitty nmtui"
-                },
-                {
-                    "label": "",
-                    "command": "blueberry"
-                },
-                {
                     "label": "󰕾",
-                    "command": "pavucontrol"
+                    "command": "pavucontrol & swaync-client -cp"
                 },
                 {
-                    "label":"󰤄",
+                    "label": "󰤄",
                     "command": "swaync-client -d",
-                    "type":"toggle"
+                    "type": "toggle"
                 },
                 {
-                    "label":"",
-                    "command": "wlogout"
+                    "label": "",
+                    "command": "wlogout & swaync-client -cp"
                 }
-
             ]
         }
     }
 }
-

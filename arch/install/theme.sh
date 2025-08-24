@@ -5,7 +5,7 @@ yay -S --noconfirm --needed \
   ttf-dejavu ttf-liberation ttf-font-awesome \
   noto-fonts noto-fonts-emoji \
   ttf-nerd-fonts-symbols ttf-nerd-fonts-symbols-mono \
-  ttf-roboto ttf-roboto-mono \
+  ttf-roboto ttf-roboto-mono ttf-code-new-roman-nerd\
   flat-remix-gtk sddm-astronaut-theme
 
 # Unzip the icons that are included with with the dotiles

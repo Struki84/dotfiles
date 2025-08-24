@@ -17,6 +17,7 @@ child,
 #window {
   background: alpha(#000, 0,6);
   color: #fff;
+  border-radius: 5px;
 }
 
 /* Main box container */
