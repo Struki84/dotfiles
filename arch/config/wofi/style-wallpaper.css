@@ -1,4 +1,3 @@
-@import url('/home/eli/.cache/wal/colors-waybar.css');
 @define-color mauve  @color9;
 @define-color red  @color9;
 @define-color lavender  @color7;
@@ -17,7 +16,8 @@ window {
     all:unset;
     padding: 20px;
     border-radius: 0px;
-    background-color: alpha(@background,.5);
+    background-color: alpha(#000,.6);
+    border: 1px solid rgba(89, 89, 89, 0.67);
 }
 #inner-box {
     margin: 2px;
@@ -41,16 +41,17 @@ window {
     padding: 20px;
     border: none;
     outline: none;
-    color: @text;
-    box-shadow: 1px 1px 5px rgba(0,0,0, .5);
-    border-radius:10;
-    background-color: alpha(@background,.2);
+    color: #fff;
+    border-radius:5px;
+    background-color: #000;
 }
+
 #input image {
     border: none;
     color: @red;
     padding-right:10px;
 }
+
 #input * {
     border: none;
     outline: none;
@@ -78,10 +79,9 @@ window {
 
 }
 #entry:selected {
-    box-shadow: 1px 1px 5px rgba(255,255,255, .03);
-    border: none;
-    border-radius: 10px;
-    background-color: rgba(0,0,0, 0.2);
+    border: 1px solid rgba(89, 89, 89, 0.67);
+    border-radius: 5px;
+    background-color: #000;
 }
 #entry:selected #text {
     color: @mauve;

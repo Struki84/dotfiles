@@ -22,12 +22,80 @@ menu() {
 }
 
 show_main_menu() {
-  go_to_menu "$(menu "Go" "󰀻  Apps\n   Capture\n󰔎  Toggle\n  Style\n  Setup\n󰉉  Install\n󰭌  Remove\n  Update \n  System")"
+  go_to_menu "$(menu "Go" "󰀻  Apps\n  Capture\n󰱔 Connect\n  Wallpaper\n  Setup\n  System")"
+}
+
+show_screenshot_menu() {
+  case $(menu "Screenshot" "  Region\n  Window\n  Display") in
+  *Region*) cmd-screenshoot ;;
+  *Window*) cmd-screenshoot window ;;
+  *Display*) cmd-screenshoot output ;;
+  *) show_capture_menu ;;
+  esac
+}
+
+show_screenrecord_menu() {
+  case $(menu "Screenrecord" "  Region\n  Display") in
+  *Region*) cmd-screenrecord ;;
+  *Display*) cmd-screenrecord output ;;
+  *) show_capture_menu ;;
+  esac
+}
+
+show_capture_menu() {
+  case $(menu "Capture" "   Screenshot\n   Screenrecord") in
+  *Screenshot*) show_screenshot_menu ;;
+  *Screenrecord*) show_screenrecord_menu ;;
+  *) show_main_menu ;;
+  esac
+}
+
+show_system_menu() {
+  case $(menu "System" "  Lock\n󱄄  Screensaver\n󰜉  Restart\n󰐥  Shutdown") in
+  *Lock*) omarchy-lock-screen ;;
+  *Screensaver*) omarchy-launch-screensaver force ;;
+  *Suspend*) systemctl suspend ;;
+  *Restart*) systemctl reboot ;;
+  *Shutdown*) systemctl poweroff ;;
+  *) show_main_menu ;;
+  esac
+}
+
+
+show_setup_power_menu() {
+  profile=$(menu "Power Profile" "$(omarchy-powerprofiles-list)" "" "$(powerprofilesctl get)")
+
+  if [[ "$profile" == "CNCLD" || -z "$profile" ]]; then
+    show_main_menu
+  else
+    powerprofilesctl set "$profile"
+  fi
+}
+
+show_setup_menu() {
+  local options="  Audio\n󰱔  Network\n󰂯  Bluetooth\n󱐋  Power Profile"
+  [ -f ~/.config/hypr/configs/keybinds.conf ] && options="$options\n  Keybindings"
+
+  case $(menu "Setup" "$options") in
+  *Audio*) pavucontrol ;;
+  *Bluetooth*)
+    rfkill unblock bluetooth
+    blueman-manager
+    ;;
+  *Power*) show_setup_power_menu ;;
+  *Keybindings*) edit_in_nvim ~/.config/hypr/bindings.conf ;;
+  *Network*) nm-connection-editor ;;
+  *) show_main_menu ;;
+  esac
 }
 
 go_to_menu() {
   case "${1,,}" in
   *apps*) walker -p "Launch…" ;;
+  *capture*) show_capture_menu ;;
+  *wallpaper*) cmd-set-wallpaper ;;
+  *system*) show_system_menu ;;
+  *setup*) show_setup_menu ;;
   esac
 }
 

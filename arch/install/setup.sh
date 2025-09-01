@@ -49,6 +49,12 @@ cp -R ~/.local/share/dotfiles/arch/config/* ~/.config/
 # Ensure application directory exists for update-desktop-database
 mkdir -p ~/.local/share/applications
 
+# Ensure Screenshots directory exists
+mkdir -p ~/Pictures/Screenshots
+
+# Ensure Screenrecords directory exists
+mkdir -p ~/Videos/Screenrecords
+
 # This computer runs on power outlet
 yay -S --noconfirm power-profiles-daemon
 powerprofilesctl set performance || true
