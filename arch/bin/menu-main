@@ -89,6 +89,13 @@ show_setup_menu() {
   esac
 }
 
+show_remote_desktop_menu() {
+  case $(menu "Connect to" "Datooine\n") in
+  *Datooine*) remmina -c vnc://datooine.local ;;
+  *) show_main_menu ;;
+  esac
+}
+
 go_to_menu() {
   case "${1,,}" in
   *apps*) walker -p "Launch…" ;;
@@ -96,6 +103,7 @@ go_to_menu() {
   *wallpaper*) cmd-set-wallpaper ;;
   *system*) show_system_menu ;;
   *setup*) show_setup_menu ;;
+  *connect*) show_remote_desktop_menu ;;
   esac
 }
 

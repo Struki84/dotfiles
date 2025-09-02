@@ -3,7 +3,8 @@ yay -S --noconfirm --needed \
   gnome-calculator ferdium-bin notion-app-electron \
   1password-beta 1password-cli xmind dbeaver rustdesk-bin \
   virtualbox virtualbox-host-modules-arch localsend-bin libreoffice-fresh vlc \
-  plex-desktop solaar rslsync
+  plex-desktop solaar rslsync \
+  remmina gtk-vnc
 
 # Setup resilio sync
 sudo usermod -aG $(id -gn) rslsync
