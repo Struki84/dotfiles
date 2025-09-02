@@ -18,11 +18,16 @@ menu() {
     fi
   fi
 
-  echo -e "$options" | walker --dmenu -p "$prompt…" "${args[@]}"
+  echo -e "$options" | walker --dmenu --theme menu -p "$prompt…" "${args[@]}"
 }
 
 show_main_menu() {
-  go_to_menu "$(menu "Go" "󰀻  Apps\n  Capture\n󰱔 Connect\n  Wallpaper\n  Setup\n  System")"
+  go_to_menu "$(menu "Go" "󰀻  Apps\n  Setup\n  Wallpaper\n  Capture\n󰱔 Remote Desktop\n  System")"
+}
+
+edit_in_nvim() {
+  notify-send "Editing config file" "$1"
+  wezterm start -- nvim "$1"
 }
 
 show_screenshot_menu() {
@@ -62,18 +67,8 @@ show_system_menu() {
 }
 
 
-show_setup_power_menu() {
-  profile=$(menu "Power Profile" "$(omarchy-powerprofiles-list)" "" "$(powerprofilesctl get)")
-
-  if [[ "$profile" == "CNCLD" || -z "$profile" ]]; then
-    show_main_menu
-  else
-    powerprofilesctl set "$profile"
-  fi
-}
-
 show_setup_menu() {
-  local options="  Audio\n󰱔  Network\n󰂯  Bluetooth\n󱐋  Power Profile"
+  local options="  Audio\n󰱔  Network\n󰂯  Bluetooth"
   [ -f ~/.config/hypr/configs/keybinds.conf ] && options="$options\n  Keybindings"
 
   case $(menu "Setup" "$options") in
@@ -82,8 +77,7 @@ show_setup_menu() {
     rfkill unblock bluetooth
     blueman-manager
     ;;
-  *Power*) show_setup_power_menu ;;
-  *Keybindings*) edit_in_nvim ~/.config/hypr/bindings.conf ;;
+  *Keybindings*) edit_in_nvim ~/.config/hypr/configs/keybinds.conf ;;
   *Network*) nm-connection-editor ;;
   *) show_main_menu ;;
   esac
@@ -103,7 +97,7 @@ go_to_menu() {
   *wallpaper*) cmd-set-wallpaper ;;
   *system*) show_system_menu ;;
   *setup*) show_setup_menu ;;
-  *connect*) show_remote_desktop_menu ;;
+  *remote\ desktop*) show_remote_desktop_menu ;;
   esac
 }
 

@@ -1,6 +1,5 @@
 close_when_open = true
 theme = "custom"
 theme_base = []
-theme_location = ["~/.config/walker/"]
 hotreload_theme = true
 force_keyboard_focus = true

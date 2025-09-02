@@ -78,15 +78,19 @@
     "active-only": false,
     "mirror": "*"
   },
-  "clock": {
-    "format": "{:%a %d %B %H:%M}",
-    "on-click": "swaync-client -t"
+  "wlr/taskbar": {
+    "format": "{icon}",
+    "icon-size": 16,
+    "icon-theme": "Vivid-Glassy-Dark-Icons",
+    "tooltip-format": "{title}",
+    "on-click": "activate",
+    "all-outputs": true,
+    "markup": true,
+    "sort-by-app-id": true
   },
-  "custom/notifications": {
-    "tooltip": false,
-    "format": "",
-    "on-click": "swaync-client -t -sw",
-    "escape": true
+  "tray": {
+    "icon-size": 16,
+    "spacing": 10
   },
   "pulseaudio": {
     "format": "{icon} {volume}%",
@@ -100,18 +104,14 @@
     },
     "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle"
   },
-  "tray": {
-    "icon-size": 16,
-    "spacing": 10
+  "clock": {
+    "format": "{:%a %d %B %H:%M}",
+    "on-click": "swaync-client -t"
   },
-  "wlr/taskbar": {
-    "format": "{icon}",
-    "icon-size": 16,
-    "icon-theme": "Vivid-Glassy-Dark-Icons",
-    "tooltip-format": "{title}",
-    "on-click": "activate",
-    "all-outputs": true,
-    "markup": true,
-    "sort-by-app-id": true
+  "custom/notifications": {
+    "tooltip": false,
+    "format": "",
+    "on-click": "swaync-client -t -sw",
+    "escape": true
   }
 }
