@@ -11,3 +11,4 @@ print_command=true
 insensitive=true
 columns=4
 image_size=150
+use_search_box=false
