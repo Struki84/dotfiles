@@ -1,0 +1,44 @@
+[
+  {
+    "icon": "\uf09b",
+    "title": "My Github",
+    "url": "https://github.com/struki84",
+    "group": "Web",
+    "category": "Development"
+  },
+  {
+    "icon": "\uf09b",
+    "title": "Astro Synapse Github",
+    "url": "https://github.com/AstroSynapseLab",
+    "group": "Web",
+    "category": "Development"
+  },
+  {
+    "icon": "\uf09b",
+    "title": "Interpress Github",
+    "url": "https://github.com/AstroSynapseLab/interpress",
+    "group": "Web",
+    "category": "Development"
+  },
+  {
+    "icon": "󰱔 ",
+    "title": "Geonosis",
+    "url": "http://geonosis.local:5000",
+    "group": "Local",
+    "category": "Server"
+  },
+  {
+    "icon": "\uf0c2",
+    "title": "Cloud",
+    "url": "http://cloud.local",
+    "group": "Local",
+    "category": "Server"
+  },
+  {
+    "icon": "\uf019",
+    "title": "Downloads",
+    "url": "http://downloads.local",
+    "group": "Local",
+    "category": "Server"
+  }
+]

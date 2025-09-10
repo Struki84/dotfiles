@@ -30,6 +30,34 @@ edit_in_nvim() {
   wezterm start -- nvim "$1"
 }
 
+show_bookmarks_menu() {
+  local bookmarks_file="${XDG_CONFIG_HOME:-$HOME/.config}/bookmarks.json"
+  if [[ ! -f "$bookmarks_file" ]]; then
+    notify-send "Bookmarks" "No bookmarks file found"
+    return
+  fi
+
+  local options
+  options=$(jq -r '.[] | (.icon // "") + " " + .title' "$bookmarks_file")
+
+  local selected
+  selected=$(menu "Bookmarks" "$options")
+  if [[ -z "$selected" ]]; then
+    return
+  fi
+
+  local title="${selected#* }"
+
+  local url
+  url=$(jq -r --arg t "$title" '.[] | select(.title == $t) | .url' "$bookmarks_file")
+
+  if [[ "$url" != "null" && -n "$url" ]]; then
+    brave --new-tab "$url"
+  else
+    notify-send "Bookmark" "No URL for '$title'"
+  fi
+}
+
 show_screenshot_menu() {
   case $(menu "Screenshot" "  Region\n  Window\n  Display") in
   *Region*) cmd-screenshoot ;;
@@ -38,7 +66,6 @@ show_screenshot_menu() {
   *) show_capture_menu ;;
   esac
 }
-
 show_screenrecord_menu() {
   case $(menu "Screenrecord" "  Region\n  Display") in
   *Region*) cmd-screenrecord ;;
@@ -98,6 +125,7 @@ go_to_menu() {
   *system*) show_system_menu ;;
   *setup*) show_setup_menu ;;
   *remote\ desktop*) show_remote_desktop_menu ;;
+  *bookmarks*) show_bookmarks_menu ;;
   esac
 }
 
