@@ -22,7 +22,7 @@ menu() {
 }
 
 show_main_menu() {
-  go_to_menu "$(menu "Go" "󰀻  Apps\n  Bookmarks\n  Capture\n󰱔 Remote Deskto\n  Wallpaperp\n  Setup\n  System")"
+  go_to_menu "$(menu "Go" "󰀻  Apps\n  Bookmarks\n  Capture\n󰱔 Remote Desktop\n  Wallpaperp\n  Setup\n  System")"
 }
 
 edit_in_nvim() {

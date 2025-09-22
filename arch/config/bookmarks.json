@@ -21,6 +21,13 @@
     "category": "Development"
   },
   {
+    "icon": "\uf019",
+    "title": "Gdrive",
+    "url": "https://drive.google.com",
+    "group": "Web",
+    "category": "Service"
+  },
+  {
     "icon": "󰱔 ",
     "title": "Geonosis",
     "url": "http://geonosis.local:5000",
