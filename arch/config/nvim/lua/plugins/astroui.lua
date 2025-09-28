@@ -39,6 +39,15 @@ return {
       vim.cmd("hi SignColumn guibg=NONE ctermbg=NONE")
       vim.cmd("hi NeoTreeNormal guibg=NONE ctermbg=NONE")
       vim.cmd("hi NeoTreeNormalNC guibg=NONE ctermbg=NONE")
+
+      -- Add border only for LSP hover popups
+      vim.api.nvim_create_autocmd("LspAttach", {
+        callback = function(args)
+          vim.keymap.set("n", "K", function()
+            vim.lsp.buf.hover({ border = "rounded" })  -- Change to "rounded", "double", etc., if preferred
+          end, { buffer = args.buf })
+        end,
+      })
     end
   },
   {
