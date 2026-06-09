@@ -2,18 +2,18 @@
 set -eEo pipefail
 
 export DOTFILES="${DOTFILES:-$HOME/.dotfiles}"
+
+mkdir -p ~/Engineering/
+mkdir -p ~/Downloads/!Torrents/
+mkdir -p ~/Pictures/Screenshots/
+mkdir -p ~/Videos/ScreenRecordings/
+mkdir -p ~/.config/user && touch ~/.config/user/.secrets
+
  
-# ----------------------------------------------------------------------------
-# GIT identity
-# ----------------------------------------------------------------------------
 git config --global user.email simun.strukan@gmail.com
 git config --global user.name "Simun Strukan"
  
-# ----------------------------------------------------------------------------
-# ZSH + oh-my-zsh + p10k  (Omarchy defaults to bash + starship)
-# ----------------------------------------------------------------------------
-mkdir -p ~/.config/user && touch ~/.config/user/.secrets
- 
+# install oh-my-zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
 # install powerlevel10k 
@@ -38,4 +38,6 @@ sudo chmod g+rw "$HOME/.rslsync/"
 systemctl --user enable rslsync
 systemctl --user start rslsync
 
-mkdir -p ~/Engineering/
+
+
+
