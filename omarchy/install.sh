@@ -20,7 +20,8 @@ omarchy pkg aur add \
   ferdium-bin \
   notion-app-electron \
   xmind \
-  plex-desktop \
   radiotray-ng-git \
   rslsync
+
+omarchy pkg aur add plex-desktop || echo "⚠ plex-desktop build failed (flaky upstream .deb) — install manually"
 

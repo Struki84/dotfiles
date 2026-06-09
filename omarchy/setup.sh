@@ -31,3 +31,8 @@ mkdir -p "$HOME/.rslsync"
 sudo chmod g+rw "$HOME/.rslsync/"
 systemctl --user enable rslsync
 systemctl --user start rslsync
+
+source ~/.dotfiles/omarchy/zsh/path.zsh
+source ~/.dotfiles/omarchy/zsh/aliases.zsh
+
+mkdir -p ~/Engineering/
