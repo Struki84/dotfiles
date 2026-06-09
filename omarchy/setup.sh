@@ -1,5 +1,7 @@
 #!/bin/bash
 set -eEo pipefail
+
+export DOTFILES="${DOTFILES:-$HOME/.dotfiles}"
  
 # ----------------------------------------------------------------------------
 # GIT identity
@@ -13,17 +15,21 @@ git config --global user.name "Simun Strukan"
 mkdir -p ~/.config/user && touch ~/.config/user/.secrets
  
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+
+# install powerlevel10k 
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git \
   "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k"
+
+# install zsh autosuggestions
 git clone https://github.com/zsh-users/zsh-autosuggestions \
   "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions"
+
+# install zsh syntax highlighting
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git \
   "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting"
-git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm
- 
-cp ~/.local/share/dotfiles/arch/shell/zsh/zshrc ~/.zshrc
-cp ~/.local/share/dotfiles/arch/shell/zsh/setup.zsh ~/.oh-my-zsh/custom/setup.zsh
- 
+
+git clone https://github.com/tmux-plugins/tpm $DOTFILES/.config/tmux/plugins/tpm
+
 # --- Resilio Sync setup ------------------------------------------------------
 sudo usermod -aG "$(id -gn)" rslsync
 sudo usermod -aG rslsync "$USER"
@@ -31,8 +37,5 @@ mkdir -p "$HOME/.rslsync"
 sudo chmod g+rw "$HOME/.rslsync/"
 systemctl --user enable rslsync
 systemctl --user start rslsync
-
-source ~/.dotfiles/omarchy/zsh/path.zsh
-source ~/.dotfiles/omarchy/zsh/aliases.zsh
 
 mkdir -p ~/Engineering/
