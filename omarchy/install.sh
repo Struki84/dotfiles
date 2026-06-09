@@ -11,7 +11,8 @@ omarchy pkg add \
   solaar \
   dbeaver \
   zsh \
-  wget
+  wget \
+  inotify-tools 
 
 # --- AUR packages ------------------------------------------------------------
 # Note: plex-desktop's PKGBUILD pulls a .deb from Plex that has been flaky;

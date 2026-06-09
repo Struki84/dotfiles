@@ -66,6 +66,12 @@ link "$CFG/omarchy/hooks/theme-set.d/tmux-user.sh" \
 link "$CFG/omarchy/hooks/theme-set.d/nvim-user.sh" \
   ~/.config/omarchy/hooks/theme-set.d/nvim-user.sh
 
+# --- hypr: layer personal user.conf onto Omarchy's config --------------------
+link "$CFG/hypr/user.conf" ~/.config/hypr/user.conf
+HYPR_BRIDGE="source = ~/.config/hypr/user.conf"
+grep -qxF "$HYPR_BRIDGE" ~/.config/hypr/hyprland.conf 2>/dev/null \
+  || echo "$HYPR_BRIDGE" >> ~/.config/hypr/hyprland.conf
+
 # tpm + plugins, cloned into the REAL config path (not the repo)
 TPM_DIR=~/.config/tmux/plugins/tpm
 [ -d "$TPM_DIR/.git" ] || { rm -rf "$TPM_DIR"; git clone https://github.com/tmux-plugins/tpm "$TPM_DIR"; }
