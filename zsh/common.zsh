@@ -18,14 +18,16 @@ alias ls="eza -l --icons --group-directories-first"
 alias lst="ls -TL 2"
 alias lsa="ls -a"
 alias lsd="ls -D"
+
 alias eng="~/Engineering/"
 alias pro="~/Engineering/Projects/"
 alias libs="~/Engineering/Libraries/"
-alias tg="~/Engineering/TestingGrounds/"
+alias sb="~/Engineering/Sandbox/"
 alias web="~/Engineering/WebSites/"
 alias asai="~/Engineering/Projects/ASAI/SourceCode/Web/"
 alias clipt="~/Engineering/Libraries/clipt/"
-alias mar-mar="~/Engineering/Projects/Mar-Mar-AI/SourceCode/"
+
+alias lg="lazygit"
 
 # PATHS
 #############################################
