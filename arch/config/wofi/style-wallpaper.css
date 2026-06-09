@@ -1,0 +1,99 @@
+@define-color mauve  @color9;
+@define-color red  @color9;
+@define-color lavender  @color7;
+@define-color text  @color7;
+@define-color placeholder_text_color #ffffff;
+
+#input {
+    @define-color placeholder_text_color #ffffff;
+}
+
+* {
+    all:unset;
+    font-family: 'CodeNewRoman Nerd Font Mono', monospace;
+    font-size: 18px;
+    outline: none;
+    border: none;
+    text-shadow:none;
+    background-color:transparent;
+}
+
+window {
+    all:unset;
+    box-shadow: none; 
+    padding: 20px;
+    border-radius: 5px;
+    background-color: alpha(#000,.6);
+    border: 1px solid rgba(89, 89, 89, 0.67);
+}
+#inner-box {
+    margin: 2px;
+    padding: 5px;
+    border: none;
+
+}
+#outer-box {    
+    border: none;
+}
+#scroll {
+    margin: 0px;
+    padding: 30px;
+    border: none;
+}
+
+#input {
+    all:unset;
+    margin-left:20px;
+    margin-right:20px;
+    margin-top:20px;
+    padding: 20px;
+    border: none;
+    outline: none;
+    color: #fff;
+    border-radius:5px;
+    background-color: #000;
+}
+
+
+#input image {
+    border: none;
+    color: @red;
+    padding-right:10px;
+}
+
+#input * {
+    border: none;
+    outline: none;
+}
+
+#input:focus {
+    outline: none;
+    border: none;
+
+    border-radius:10;
+}
+#text {
+    margin: 5px;
+    border: none;
+    color: @text;
+    outline: none;
+}
+#entry {
+    all:unset;
+    padding: 20 0 20 45;
+}
+#entry arrow {
+    border: none;
+    color: @lavender;
+
+}
+#entry:selected {
+    border-radius: 5px;
+    background-color: #000;
+}
+#entry:selected #text {
+    color: @mauve;
+}
+#entry:drop(active) {
+    background-color: @lavender !important;
+}

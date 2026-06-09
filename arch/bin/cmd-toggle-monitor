@@ -1,0 +1,34 @@
+#!/bin/bash
+# Settings are hardcoded based on my config: DP-2 at 2560x1440@59.95,0x0,1 and DP-3 at 2560x1440@59.95,2560x0,1
+
+if [ -z "$1" ]; then
+    echo "Error: Please provide the monitor name as an argument (DP-2 or DP-3)."
+    exit 1
+fi
+
+MONITOR="$1"
+
+# Determine the exact settings based on monitor name
+case "$MONITOR" in
+    DP-2)
+        SETTINGS="2560x1440@59.95,0x0,1"
+        ;;
+    DP-3)
+        SETTINGS="2560x1440@59.95,2560x0,1"
+        ;;
+    *)
+        echo "Error: Unsupported monitor name. Only DP-2 and DP-3 are configured."
+        exit 1
+        ;;
+esac
+
+# Check if the monitor is currently active (enabled)
+if hyprctl monitors | grep -q "^Monitor $MONITOR "; then
+    # Disable it
+    hyprctl keyword monitor "$MONITOR",disable
+    echo "Monitor $MONITOR disabled."
+else
+    # Enable it with your exact settings
+    hyprctl keyword monitor "$MONITOR","$SETTINGS"
+    echo "Monitor $MONITOR enabled with settings: $SETTINGS"
+fi

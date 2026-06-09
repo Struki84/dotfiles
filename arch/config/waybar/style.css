@@ -1,0 +1,76 @@
+* {
+    font-size:15px;
+    font-family: "Roboto Regular", "JetBrainsMono Nerd Font", sans-serif;
+    font-weight: 400;
+}
+
+window#waybar{
+    all:unset;
+}
+
+tooltip, #processor, #hw, #net, #window, #workspaces, #taskbar, #cc, #tray, #pulseaudio{
+    color: #fff;
+    border-radius:5px;
+    background: alpha(#000, .3);
+}
+
+#processor, #hw, #net, #cc, #tray, #pulseaudio {
+    padding: 0px 8px 0px 8px;
+}
+
+#processor {
+    margin: 0px 5px 0px 0px;
+}
+
+#hw, #net, #pulseaudio, #tray {
+    margin: 0px 5px 0px 5px;
+}
+
+#cc {
+    
+    margin: 0px 0px 0px 5px;
+}
+
+#cpu, #custom-gpu-temp, #memory, #disk, #network, #notifications, #clock {
+    padding: 0px 5px 0px 5px;
+}
+
+#window {
+    margin:10px 0px 0px 0px;
+    padding: 0px 8px 0px 8px;
+}
+
+#workspaces button {
+    all:unset;
+    padding: 0px 8px;
+    margin: 0;
+    border: none;
+    background: transparent;
+    color: white;
+}
+
+#workspaces button:hover {
+    color:rgba(0,0,0,0);
+    border: none;
+    text-shadow: 0px 0px 1.5px rgba(0, 0, 0, .5);
+    transition: all 1s ease;
+}
+
+#taskbar {
+    padding: 0px 8px 0px 8px;
+}
+
+#taskbar button {
+    padding: 0px 8px 0px 8px;
+    margin: 0px;
+}
+
+
+.modules-left {
+    margin:10px 0px 0px 10px;
+}
+
+
+.modules-right {
+    margin: 10px 10px 0px 0px;
+}

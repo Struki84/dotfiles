@@ -1,0 +1,54 @@
+#!/bin/bash
+
+yay -S --noconfirm --needed \
+  networkmanager network-manager-applet nm-connection-editor \
+  gnome-online-accounts gnome-control-center evolution-data-server \
+  gnome-keyring libsecret inotify-tools \
+  bluez bluez-utils blueman pavucontrol \
+  swaync wlogout gnome-calendar nautilus sushi ffmpegthumbnailer \
+  slurp satty mpv evince imv wf-recorder imagemagick \
+  btop fastfetch wl-clip-persist libsecret \
+  waybar hyprpaper hyprpicker hyprshot hyprlock hypridle \
+  walker-bin libqalculate swayosd radiotray-ng-git \
+  xdg-desktop-portal-hyprland xdg-desktop-portal-gtk \
+  gst-plugins-base gst-plugins-good gst-plugins-bad \
+  gst-plugins-ugly gst-libav \
+  brave-bin
+  
+
+# Start bluetooth
+sudo systemctl enable --now bluetooth.service
+
+# Start Network Manager
+sudo systemctl enable --now NetworkManager
+
+update-desktop-database ~/.local/share/applications
+
+# Open all images with imv
+xdg-mime default imv.desktop image/png
+xdg-mime default imv.desktop image/jpeg
+xdg-mime default imv.desktop image/gif
+xdg-mime default imv.desktop image/webp
+xdg-mime default imv.desktop image/bmp
+xdg-mime default imv.desktop image/tiff
+
+# Open PDFs with the Document Viewer
+xdg-mime default org.gnome.Evince.desktop application/pdf
+
+# Open video files with mpv
+xdg-mime default mpv.desktop video/mp4
+xdg-mime default mpv.desktop video/x-msvideo
+xdg-mime default mpv.desktop video/x-matroska
+xdg-mime default mpv.desktop video/x-flv
+xdg-mime default mpv.desktop video/x-ms-wmv
+xdg-mime default mpv.desktop video/mpeg
+xdg-mime default mpv.desktop video/ogg
+xdg-mime default mpv.desktop video/webm
+xdg-mime default mpv.desktop video/quicktime
+xdg-mime default mpv.desktop video/3gpp
+xdg-mime default mpv.desktop video/3gpp2
+xdg-mime default mpv.desktop video/x-ms-asf
+xdg-mime default mpv.desktop video/x-ogm+ogg
+xdg-mime default mpv.desktop video/x-theora+ogg
+xdg-mime default mpv.desktop application/ogg
+ 

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+active=$(hyprctl activewindow -j)
+class=$(jq -r .class <<< "$active")
+title=$(jq -r .title <<< "$active")
+pid=$(jq -r .pid <<< "$active")
+# Get child procs (e.g., nvim file via ps or /proc)
+child=$(ps -o comm= -p $(pgrep -P $pid nvim) 2>/dev/null)
+file=$(ps -o args= -p $(pgrep -P $pid nvim) 2>/dev/null | awk '{print $NF}' | head -1)  # Rough open file grab
+echo "$class | $title${child:+: $child - $file}"

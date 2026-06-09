@@ -1,0 +1,78 @@
+[
+   {
+      "group" : "root",
+      "stations" : [
+	      {
+	      "name": "Yammat FM",
+	      "url": "https://stream.yammat.fm/radio/8000/yammat.mp3"
+	      },	{
+		      "name": "Radio 808",
+		      "url": "http://stream.radio808.info:8003/"
+	      },	{
+		      "name": "Radio Sljeme",
+		      "url": "http://23623.live.streamtheworld.com:80/PROGRAM1AAC_SC\r"
+	      },	{
+		      "name": "Radio Student",
+		      "url": "http://161.53.122.184:8000/AAC128.aac"
+	      },	{
+		      "name": "Top Radio",
+		      "url": "https://c5.hostingcentar.com/streams/topradio/"
+	      },	{
+		      "name": "Radio 101",
+		      "url": "http://live.radio101.hr:9531/",
+	      },	{
+		      "name": "BBC Radio 6 Music",
+		      "address": "http://lstn.lv/bbcradio.m3u8?station=bbc_6music%22&bitrate=320000%22",
+	      },	{
+		      "name": "Smooth Jazz",
+		      "url": "http://vip2.fastcast4u.com/proxy/sjcd109?mp=/1",
+	      },	{
+		      "name": "Funky Ass Tunes",
+		      "url": "http://ams1.reliastream.com:7046/funkyasstunes",
+	      },	{
+		      "name": "Classic JAZZ",
+		      "url": "http://jfm1.hostingradio.ru:14536/ijstream.mp3",
+	      },
+         {
+            "name" : "181.FM Classic Hits",
+            "url" : "http://www.181.fm/winamp.pls?station=181-greatoldies&file=181-greatoldies.pls"
+         },
+         {
+            "name" : "Indie Pop Rocks!",
+            "url" : "http://somafm.com/indiepop.pls"
+         },
+         {
+            "name" : "Rumsey Retro Radio",
+            "url" : "https://www.rumseyretro.ca/ewExternalFiles/rumseyretro.pls"
+         },
+         {
+            "name" : "WNAR-AM Radio",
+            "url" : "https://streaming.live365.com/a91284"
+         },
+         {
+            "name" : "Lounge Radio",
+            "url" : "http://www.lounge-radio.com/listen128.m3u"
+         },
+         {
+            "name" : "Beat Blender",
+            "url" : "http://somafm.com/beatblender.pls"
+         },
+         {
+            "name" : "Secret Agent",
+            "url" : "http://somafm.com/secretagent.pls"
+         },
+         {
+            "name" : "Groove Salad",
+            "url" : "http://somafm.com/groovesalad.pls"
+         },
+         {
+            "name" : "Illinois Street Lounge",
+            "url" : "http://somafm.com/illstreet.pls"
+         },
+         {
+            "name" : "Drone Zone",
+            "url" : "http://somafm.com/dronezone.pls"
+         }
+      ]
+   }
+]

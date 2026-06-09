@@ -1,0 +1,5 @@
+close_when_open = true
+theme = "custom"
+theme_base = []
+hotreload_theme = true
+force_keyboard_focus = true
