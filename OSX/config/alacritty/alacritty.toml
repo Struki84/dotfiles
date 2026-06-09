@@ -1,0 +1,43 @@
+[colors.primary]
+background = "#1E1E2E"  # Mocha base
+foreground = "#CDD6F4"  # Mocha text
+ 
+[colors.cursor]
+text = "#1E1E2E"        # Mocha base (cursor text)
+cursor = "#F5E0DC"      # Mocha rosewater (cursor)
+ 
+[colors.normal]
+black = "#45475A"       # Mocha surface0
+red = "#F38BA8"         # Mocha red
+green = "#A6E3A1"       # Mocha green
+yellow = "#F9E2AF"      # Mocha yellow
+blue = "#89B4FA"        # Mocha blue
+magenta = "#F5C2E7"     # Mocha pink
+cyan = "#94E2D5"        # Mocha teal
+white = "#BAC2DE"       # Mocha subtext1
+ 
+[colors.bright]
+black = "#585B70"       # Mocha surface2
+red = "#F38BA8"         # Mocha red
+green = "#A6E3A1"       # Mocha green
+yellow = "#F9E2AF"      # Mocha yellow
+blue = "#89B4FA"        # Mocha blue
+magenta = "#F5C2E7"     # Mocha pink
+cyan = "#94E2D5"        # Mocha teal
+white = "#A6ADC8"       # Mocha subtext0
+ 
+# Window settings
+[window]
+opacity = 0.95          # Window background opacity (0.0 to 1.0)
+decorations = "Buttonless"  # Closest to "RESIZE" (macOS: no titlebar buttons, allows resizing; Linux: uses system decorations)
+padding.x = 0           # Left and right padding
+padding.y = 2           # Top and bottom padding (Alacritty doesn't allow separate top/bottom)
+option_as_alt = "Both"  # Or "Left"/"Right" if you prefer one side
+ 
+# Font settings
+[font]
+size = 12               # Default to macOS font size; see notes for Linux
+ 
+[font.normal]
+family = "JetBrainsMono Nerd Font"
+style = "Regular"
