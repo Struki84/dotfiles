@@ -59,8 +59,12 @@ grep -qxF "$BRIDGE" ~/.config/tmux/tmux.conf 2>/dev/null \
 
 # theme-set hook: self-heals the bridge + reloads live tmux on theme change
 mkdir -p ~/.config/omarchy/hooks/theme-set.d
+
 link "$CFG/omarchy/hooks/theme-set.d/tmux-user.sh" \
   ~/.config/omarchy/hooks/theme-set.d/tmux-user.sh
+
+link "$CFG/omarchy/hooks/theme-set.d/nvim-user.sh" \
+  ~/.config/omarchy/hooks/theme-set.d/nvim-user.sh
 
 # tpm + plugins, cloned into the REAL config path (not the repo)
 TPM_DIR=~/.config/tmux/plugins/tpm
