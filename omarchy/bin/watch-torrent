@@ -4,10 +4,7 @@ TARGET_DIR="$HOME/Downloads"
 DEST_DIR="$HOME/Downloads/!Torrents"
 
 mkdir -p "$DEST_DIR"
-while true; do
-  inotifywait -e create -e moved_to -q "$TARGET_DIR" | while read -r dir action file; do
-    if [[ "$file" == *.torrent ]]; then
-      mv "$dir$file" "$DEST_DIR/"
-    fi
-  done
+
+inotifywait -m -e create -e moved_to -q --format '%w%f' "$TARGET_DIR" | while read -r path; do
+  [[ "$path" == *.torrent ]] && mv "$path" "$DEST_DIR/"
 done

@@ -34,7 +34,13 @@ function cd() {
 
   if [ -d ".venv" ]; then
     source .venv/bin/activate 2>/dev/null || true
-  elif [ -n "$VIRTUAL_ENV" ] && [ "$PWD" != "$(dirname $VIRTUAL_ENV)"* ]; then
-    deactivate 2>/dev/null || true
+  elif [ -n "$VIRTUAL_ENV" ]; then
+    # Deactivate only once we've left the venv's project tree.
+    # (case-glob does a real prefix match; the old `[ ... != ...* ]` did not.)
+    local proj="$(dirname "$VIRTUAL_ENV")"
+    case "$PWD/" in
+      "$proj"/*) ;;  # still inside project -> keep venv active
+      *) deactivate 2>/dev/null || true ;;
+    esac
   fi
 }

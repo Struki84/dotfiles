@@ -15,7 +15,7 @@ link() {
 }
 
 # install packages not shipped by Omarchy
-bash "$DOTFILES/omarchy/install.sh"
+bash "$DOTFILES/omarchy/install.sh" || echo "⚠ install.sh: some packages failed — continuing with config"
 
 # --- Directories -------------------------------------------------------------
 mkdir -p ~/Engineering/
@@ -29,7 +29,8 @@ git config --global user.email simun.strukan@gmail.com
 git config --global user.name "Simun Strukan"
 
 # --- zsh: oh-my-zsh + p10k + plugins ------
-KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+[ -d "$HOME/.oh-my-zsh" ] || \
+  KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git \
   "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k" 2>/dev/null || true
@@ -78,9 +79,16 @@ TPM_DIR=~/.config/tmux/plugins/tpm
 "$TPM_DIR/bin/install_plugins" || true
 
 # --- Resilio Sync setup ------------------------------------------------------
-sudo usermod -aG "$(id -gn)" rslsync
-sudo usermod -aG rslsync "$USER"
-mkdir -p "$HOME/.rslsync"
-sudo chmod g+rw "$HOME/.rslsync/"
-systemctl --user enable rslsync
-systemctl --user start rslsync
+if id rslsync &>/dev/null; then
+  sudo usermod -aG "$(id -gn)" rslsync || true
+  sudo usermod -aG rslsync "$USER" || true
+  mkdir -p "$HOME/.rslsync"
+  sudo chmod g+rw "$HOME/.rslsync/" || true
+  if systemctl --user list-unit-files 2>/dev/null | grep -q '^rslsync\.service'; then
+    systemctl --user enable --now rslsync || true
+  else
+    echo "ℹ rslsync has no --user unit; skipping user service (check 'systemctl status rslsync' for a system unit)"
+  fi
+else
+  echo "⚠ rslsync user not found — package likely didn't install; skipping Resilio setup"
+fi
