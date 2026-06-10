@@ -73,6 +73,16 @@ HYPR_BRIDGE="source = ~/.config/hypr/user.conf"
 grep -qxF "$HYPR_BRIDGE" ~/.config/hypr/hyprland.conf 2>/dev/null \
   || echo "$HYPR_BRIDGE" >> ~/.config/hypr/hyprland.conf
 
+UWSM_ENV="$HOME/.config/uwsm/env"
+touch "$UWSM_ENV"
+grep -qxF 'export DOTFILES_PATH=$HOME/.dotfiles/omarchy' "$UWSM_ENV" \
+  || cat >> "$UWSM_ENV" <<'EOF'
+
+# My dotfiles bins
+export DOTFILES_PATH=$HOME/.dotfiles/omarchy
+export PATH=$DOTFILES_PATH/bin:$HOME/.local/bin:$PATH
+EOF
+
 # tpm + plugins, cloned into the REAL config path (not the repo)
 TPM_DIR=~/.config/tmux/plugins/tpm
 [ -d "$TPM_DIR/.git" ] || { rm -rf "$TPM_DIR"; git clone https://github.com/tmux-plugins/tpm "$TPM_DIR"; }
