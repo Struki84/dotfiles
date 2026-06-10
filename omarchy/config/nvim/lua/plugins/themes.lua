@@ -1,5 +1,3 @@
-if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
-
 return {
   { "ribru17/bamboo.nvim", lazy = true, priority = 1000 },
   { "bjarneo/aether.nvim", lazy = true, priority = 1000 },
@@ -7,7 +5,7 @@ return {
   { "bjarneo/hackerman.nvim", lazy = true, priority = 1000 },
   { "bjarneo/vantablack.nvim", lazy = true, priority = 1000 },
   { "bjarneo/white.nvim", lazy = true, priority = 1000 },
-  -- { "catppuccin/nvim", name = "catppuccin", lazy = true, priority = 1000 },
+  { "catppuccin/nvim", name = "catppuccin", lazy = true, priority = 1000 },
   { "sainnhe/everforest", lazy = true, priority = 1000 },
   { "kepano/flexoki-neovim", lazy = true, priority = 1000 },
   { "ellisonleao/gruvbox.nvim", lazy = true, priority = 1000 },
