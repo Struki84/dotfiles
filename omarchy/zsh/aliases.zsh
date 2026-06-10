@@ -1,7 +1,7 @@
 ### Navigation shortcuts
 alias ls="eza -l --icons --group-directories-first"
 alias lst="eza -TL 2 --icons --group-directories-first"
-alias lsa="eza -a"
+alias lsa="eza -al --icons --group-directories-first"
 alias lsd="eza -D"
 
 alias eng="~/Engineering/"
