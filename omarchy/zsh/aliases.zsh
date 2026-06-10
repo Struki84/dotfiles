@@ -1,15 +1,18 @@
 ### Navigation shortcuts
 alias ls="eza -l --icons --group-directories-first"
-alias lst="ls -TL 2"
-alias lsa="ls -a"
-alias lsd="ls -D"
+alias lst="eza -TL 2 --icons --group-directories-first"
+alias lsa="eza -a"
+alias lsd="eza -D"
+
 alias eng="~/Engineering/"
 alias pro="~/Engineering/Projects/"
 alias libs="~/Engineering/Libraries/"
-alias tg="~/Engineering/TestingGrounds/"
+alias sb="~/Engineering/Sandbox"
 alias web="~/Engineering/WebSites/"
-alias asai="~/Engineering/Projects/ASAI/SourceCode/Web/"
+alias asai="~/Engineering/Projects/ASAI/SourceCode"
 alias clipt="~/Engineering/Libraries/clipt/"
+
+alias lg="lazygit"
 
 export SUDO_EDITOR="nvim"
 alias "sudoedit"='function _sudoedit(){sudo -e "$1";};_sudoedit'

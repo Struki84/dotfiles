@@ -76,7 +76,9 @@ grep -qxF "$HYPR_BRIDGE" ~/.config/hypr/hyprland.conf 2>/dev/null \
 # tpm + plugins, cloned into the REAL config path (not the repo)
 TPM_DIR=~/.config/tmux/plugins/tpm
 [ -d "$TPM_DIR/.git" ] || { rm -rf "$TPM_DIR"; git clone https://github.com/tmux-plugins/tpm "$TPM_DIR"; }
+tmux new-session -d -s __tpm_install 2>/dev/null || true
 "$TPM_DIR/bin/install_plugins" || true
+tmux kill-session -t __tpm_install 2>/dev/null || true
 
 # --- Resilio Sync setup ------------------------------------------------------
 if id rslsync &>/dev/null; then
@@ -92,3 +94,8 @@ if id rslsync &>/dev/null; then
 else
   echo "⚠ rslsync user not found — package likely didn't install; skipping Resilio setup"
 fi
+
+# link vesktop themes
+link "$CFG/omarchy/vesktop/themes" \
+  ~/.config/vesktop/themes/
+
