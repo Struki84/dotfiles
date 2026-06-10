@@ -1,4 +1,5 @@
 if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
+
 return {
   "hrsh7th/nvim-cmp",
   opts = function(_, opts)
@@ -7,9 +8,9 @@ return {
       if cmp.visible() then
         cmp.select_next_item()
       else
-        vim.fn['codeium#Accept']()
+        vim.fn["codeium#Accept"]()
         fallback()
       end
-    end, { "i", "s"})
+    end, { "i", "s" })
   end,
 }

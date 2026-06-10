@@ -11,6 +11,7 @@ alias sb="~/Engineering/Sandbox"
 alias web="~/Engineering/WebSites/"
 alias asai="~/Engineering/Projects/ASAI/SourceCode"
 alias clipt="~/Engineering/Libraries/clipt/"
+alias dot="~/.dotfiles"
 
 alias lg="lazygit"
 
