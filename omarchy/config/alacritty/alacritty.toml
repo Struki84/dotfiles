@@ -4,7 +4,8 @@ general.import = ["~/.config/omarchy/current/theme/alacritty.toml"]
 normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
 bold   = { family = "JetBrainsMono Nerd Font", style = "Bold" }
 italic = { family = "JetBrainsMono Nerd Font", style = "Italic" }
-size   = 9
+size   = 8.8
+offset = { x = 0, y = 0 }
 
 [terminal.shell]
 program = "/usr/bin/zsh"
@@ -12,4 +13,5 @@ program = "/usr/bin/zsh"
 [window]
 padding.x = 0           # Left and right padding
 padding.y = 0           # Top and bottom padding (Alacritty doesn't allow separate top/bottom)
-dynamic_padding = true  # spread leftover pixels evenly so no gap collects at the bottom
+dynamic_padding = true # spread leftover pixels evenly so no gap collects at the bottom
+
