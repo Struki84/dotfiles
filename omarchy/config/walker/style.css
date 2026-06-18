@@ -1,0 +1,36 @@
+@import "../../../../.local/share/omarchy/default/walker/themes/omarchy-default/style.css";
+
+/* black glass body */
+.box-wrapper {
+  background: alpha(#000, 0.6);
+  border: 1px solid alpha(#595959, 0.67);
+  border-radius: 5px;
+}
+
+/* search row see-through; input becomes a black pill */
+.search-container {
+  background: transparent;
+}
+.input {
+  background: #000;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+.input placeholder {
+  color: #fff;
+  opacity: 0.5;
+}
+
+/* solid-black rounded selection, text stays white */
+child:selected {
+  background: #000;
+  border-radius: 5px;
+}
+child:selected .item-box * {
+  color: #fff;
+}
+
+.item-text {
+  color: #fff;
+}

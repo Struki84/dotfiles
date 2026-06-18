@@ -1,0 +1,183 @@
+* {
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 12px;
+    font-weight: 400;
+    min-height: 0;
+}
+
+/* the single bar: black, transparent, floating with your margins */
+window#waybar {
+    background: alpha(#000, 0.2);
+    color: #ffffff;
+    border-radius: 5px;            /* set 0 if you want sharp corners */
+}
+
+/* no per-module backgrounds = one bar, not islands */
+#workspaces,
+#clock,
+#cpu,
+#memory,
+#network,
+#bluetooth,
+#pulseaudio,
+#battery,
+#tray,
+#custom-update,
+#custom-omarchy {
+    background: transparent;
+    color: #ffffff;
+    padding: 0 8px;
+    margin: 0;
+}
+
+#cpu,
+#temperature,
+#custom-gpu-temp,
+#memory,
+#disk,
+#network {
+    background: transparent;
+    color: #ffffff;
+    padding: 0 8px;
+}
+
+#workspaces button {
+    all: unset;
+    padding: 0 8px;
+    color: #ffffff;
+}
+
+#workspaces button.active {
+    text-shadow: 0 0 2px rgba(255, 255, 255, 0.6);
+}
+
+#workspaces button:hover {
+    background: alpha(#fff, 0.1);
+    border-radius: 4px;
+}
+
+tooltip {
+    background: alpha(#000, 0.8);
+    color: #ffffff;
+    border-radius: 6px;
+}
+
+#custom-weather {
+    padding: 0 8px;
+}
+
+.modules-right {
+    margin-right: 6px;
+}
+
+/* @import "../omarchy/current/theme/waybar.css"; */
+/**/
+/* * { */
+/*   background-color: @background; */
+/*   color: @foreground; */
+/**/
+/*   border: none; */
+/*   border-radius: 0; */
+/*   min-height: 0; */
+/*   font-family: 'JetBrainsMono Nerd Font'; */
+/*   font-size: 12px; */
+/* } */
+/**/
+/* .modules-left { */
+/*   margin-left: 8px; */
+/* } */
+/**/
+/* .modules-right { */
+/*   margin-right: 8px; */
+/* } */
+/**/
+/* #workspaces button { */
+/*   all: initial; */
+/*   padding: 0 6px; */
+/*   margin: 0 1.5px; */
+/*   min-width: 9px; */
+/* } */
+/**/
+/* #workspaces button.empty { */
+/*   opacity: 0.5; */
+/* } */
+/**/
+/* #cpu, */
+/* #battery, */
+/* #pulseaudio, */
+/* #custom-omarchy, */
+/* #custom-update { */
+/*   min-width: 12px; */
+/*   margin: 0 7.5px; */
+/* } */
+/**/
+/* #tray { */
+/*   margin-right: 16px; */
+/* } */
+/**/
+/* #bluetooth { */
+/*   margin-right: 17px; */
+/* } */
+/**/
+/* #network { */
+/*   margin-right: 13px; */
+/* } */
+/**/
+/* #custom-expand-icon { */
+/*   margin-right: 18px; */
+/* } */
+/**/
+/* tooltip { */
+/*   padding: 2px; */
+/* } */
+/**/
+/* #custom-update { */
+/*   font-size: 10px; */
+/* } */
+/**/
+/* #clock { */
+/*   margin-left: 8.75px; */
+/* } */
+/**/
+/* #custom-weather { */
+/*   margin-left: 7.5px; */
+/*   margin-right: 7.5px; */
+/* } */
+/**/
+/* #custom-weather.unavailable { */
+/*   min-width: 0; */
+/*   margin: 0; */
+/*   padding: 0; */
+/* } */
+/**/
+/* .hidden { */
+/*   opacity: 0; */
+/* } */
+/**/
+/* #custom-screenrecording-indicator, */
+/* #custom-idle-indicator, */
+/* #custom-notification-silencing-indicator { */
+/*   min-width: 12px; */
+/*   margin-left: 5px; */
+/*   margin-right: 0; */
+/*   font-size: 10px; */
+/*   padding-bottom: 1px; */
+/* } */
+/**/
+/* #custom-screenrecording-indicator.active { */
+/*   color: #a55555; */
+/* } */
+/**/
+/* #custom-idle-indicator.active, */
+/* #custom-notification-silencing-indicator.active { */
+/*   color: #a55555; */
+/* } */
+/**/
+/* #custom-voxtype { */
+/*   min-width: 12px; */
+/*   margin: 0 0 0 7.5px; */
+/* } */
+/**/
+/* #custom-voxtype.recording { */
+/*   color: #a55555; */
+/* } */

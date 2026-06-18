@@ -6,4 +6,15 @@ return {
   { import = "astrocommunity.colorscheme.catppuccin" },
   { import = "astrocommunity.recipes.disable-tabline" },
   { import = "astrocommunity.recipes.heirline-nvchad-statusline" },
+  { import = "astrocommunity.pack.python" },
+  {
+    "AstroNvim/astrolsp",
+    opts = {
+      servers = { "basedpyright" },
+      handlers = {
+        pyrefly = false,
+        ty = false,
+      },
+    },
+  },
 }

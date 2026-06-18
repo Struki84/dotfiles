@@ -106,6 +106,10 @@ else
 fi
 
 # link vesktop themes
-link "$CFG/omarchy/vesktop/themes" \
+link "$CFG/omarchy/config/vesktop/themes" \
   ~/.config/vesktop/themes/
+
+link "$CFG/omarchy/config/mako" \
+  ~/.config/mako/
+
 

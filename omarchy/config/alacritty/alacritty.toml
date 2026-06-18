@@ -13,5 +13,5 @@ program = "/usr/bin/zsh"
 [window]
 padding.x = 0           # Left and right padding
 padding.y = 0           # Top and bottom padding (Alacritty doesn't allow separate top/bottom)
-dynamic_padding = true # spread leftover pixels evenly so no gap collects at the bottom
+# dynamic_padding = true # spread leftover pixels evenly so no gap collects at the bottom
 
