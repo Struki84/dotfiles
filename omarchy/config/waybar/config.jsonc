@@ -17,18 +17,18 @@
   "modules-center": [
     "hyprland/window",
     "custom/voxtype",
-    "custom/screenrecording-indicator",
-    "custom/idle-indicator"
+    "custom/screenrecording-indicator"
+    // "custom/idle-indicator"
   ],
   "modules-right": [
     "group/tray-expander",
     "custom/update",
-    "custom/notification-silencing-indicator",
     "bluetooth",
     "network",
     "pulseaudio",
     "battery",
     "custom/weather",
+    "custom/notification-silencing-indicator",
     "clock",
     "custom/omarchy"
   ],
