@@ -7,7 +7,6 @@ set -eEo pipefail
 
 # --- Official / OPR packages -------------------------------------------------
 omarchy pkg add \
-  remmina \
   solaar \
   dbeaver \
   zsh \

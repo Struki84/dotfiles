@@ -27,7 +27,7 @@ mkdir -p ~/.config/user && touch ~/.config/user/.secrets
 echo "done!"
 
 # MANAGE PACKAGES -------------------------------------------------------------
-echo "Install packages not shipped by Omarchy and removed unsed Omarchy packages..."
+echo "Install packages not shipped by Omarchy and remove unsed Omarchy packages..."
 
 bash "$DOTFILES/omarchy/install.sh" || echo "⚠ install.sh: some packages failed — continuing with config"
 
@@ -117,30 +117,29 @@ export DOTFILES_PATH=$HOME/.dotfiles/omarchy
 export PATH=$DOTFILES_PATH/bin:$HOME/.local/bin:$PATH
 EOF
 
+# WALKER
+mkdir -p ~/.config/walker/themes/user/
+link ~/.local/share/omarchy/default/walker/themes/omarchy-default/layout.xml ~/.config/walker/themes/user/layout.xml
+link $CFG/walker/style.css ~/.config/walker/themes/user/style.css
 
 
 # WIP -------------------------------------------------------------
-
-
-# Setup the gtk theme
-# gsettings set org.gnome.desktop.interface gtk-theme 'Flat-Remix-GTK-Blue-Darkest'
-# gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 
 # --- Git identity ------------------------------------------------------------
 git config --global user.email simun.strukan@gmail.com
 git config --global user.name "Simun Strukan"
 
+# --- Hiding unneded apps from walker launcher --------------------------------
 mkdir -p ~/.local/share/applications/hidden/
 cp $DOTFILES/omarchy/applications/hidden/rtng-bookmark-editor.desktop ~/.local/share/applications/hidden/
 cp $DOTFILES/omarchy/applications/hidden/winetricks.desktop ~/.local/share/applications/hidden/
 
 update-desktop-database ~/.local/share/applications
 
-mkdir -p ~/.config/walker/themes/user/
-
-link ~/.local/share/omarchy/default/walker/themes/omarchy-default/layout.xml ~/.config/walker/themes/user/layout.xml
-link $CFG/walker/style.css ~/.config/walker/themes/user/style.css
-
+# --- Styling GTK ui and icons ----------------------------------------------
 mkdir -p ~/.local/share/icons
 tar -xzf $DOTFILES/icons/Vivid-Glassy-Dark.tar.gz -C ~/.local/share/icons/
+
 gsettings set org.gnome.desktop.interface icon-theme "Vivid-Glassy-Dark-Icons"
+gsettings set org.gnome.desktop.interface gtk-theme "Flat-Remix-GTK-Blue-Darkest"
+gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
