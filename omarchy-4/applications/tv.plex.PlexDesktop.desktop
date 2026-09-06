@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Plex
+Comment=Plex client for desktop computers
+Exec=env -u QT_STYLE_OVERRIDE QT_QPA_PLATFORM=xcb QTWEBENGINE_CHROMIUM_FLAGS="--disable-gpu" Plex
+Icon=tv.plex.PlexDesktop
+Terminal=false
+Categories=AudioVideo;Player;X-Media;
+X-Flatpak=tv.plex.PlexDesktop
+StartupWMClass=Plex
+Name[en_US]=Plex

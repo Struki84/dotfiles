@@ -1,0 +1,325 @@
+#!/usr/bin/env bash
+
+# omarchy:summary=Install and run QEMU/KVM guest VMs.
+
+set -euo pipefail
+shopt -s inherit_errexit
+
+BASE_DIR="${HOME}/.qemu-vm"
+ISO_CACHE="${BASE_DIR}/.iso"
+
+# UEFI firmware (distro-agnostic, Secure Boot off)
+OVMF_CODE="/usr/share/edk2/x64/OVMF_CODE.4m.fd"
+OVMF_VARS_TEMPLATE="/usr/share/edk2/x64/OVMF_VARS.4m.fd"
+
+# Defaults for `install`
+DEFAULT_DISK_SIZE="100G"
+DEFAULT_MEMORY="8192"
+DEFAULT_CPU_CORES="8"
+DEFAULT_GUEST_WIDTH="2560"
+DEFAULT_GUEST_HEIGHT="1440"
+DEFAULT_SHARED_DIRECTORY="${HOME}/.dotfiles"
+SSH_PORT_START="2222"
+SHARE_TAG="share"
+
+usage() {
+	cat <<EOF
+Usage: qemu-vm <command> [args]
+
+Commands:
+  install <iso|url> [options]   Create a VM and boot its installer
+      --name NAME               VM name (default: ISO filename minus .iso)
+      --sha256 HASH             Verify ISO checksum
+      --share DIR               Host dir shared via 9p (default: ${DEFAULT_SHARED_DIRECTORY})
+      --no-share                Disable shared dir
+      --size WxH                Guest resolution (default: ${DEFAULT_GUEST_WIDTH}x${DEFAULT_GUEST_HEIGHT})
+      --disk SIZE               Virtual disk size (default: ${DEFAULT_DISK_SIZE})
+      --memory MB               RAM in MB (default: ${DEFAULT_MEMORY})
+      --cpus N                  CPU cores (default: ${DEFAULT_CPU_CORES})
+
+  run <name> [options]          Boot an installed VM from disk
+      --iso                     Re-attach the install ISO
+      --size WxH                Override resolution for this run
+      --memory MB               Override RAM for this run
+      --cpus N                  Override CPU cores for this run
+
+  ls                            List installed VMs
+  rm <name>                     Delete a VM
+  reset <name>                  Wipe disk + NVRAM and boot the installer again
+
+VMs live in ${BASE_DIR}/<name>, downloaded ISOs in ${ISO_CACHE}.
+EOF
+}
+
+die() {
+	echo "qemu-vm: $*" >&2
+	exit 1
+}
+
+confirm() {
+	local reply
+	read -r -p "$1 [y/N] " reply
+	[[ "${reply}" =~ ^[Yy]$ ]]
+}
+
+vm_dir() { echo "${BASE_DIR}/$1"; }
+
+require_vm() {
+	local name="$1"
+	[[ -n "${name}" ]] || die "missing VM name"
+	[[ -f "$(vm_dir "${name}")/config" ]] || die "no VM named '${name}' (see: qemu-vm ls)"
+}
+
+load_config() {
+	# shellcheck disable=SC1090
+	source "$(vm_dir "$1")/config"
+}
+
+parse_size() {
+	[[ "$1" =~ ^([0-9]+)x([0-9]+)$ ]] || die "invalid --size '$1', expected WxH (e.g. 1920x1080)"
+	GUEST_WIDTH="${BASH_REMATCH[1]}"
+	GUEST_HEIGHT="${BASH_REMATCH[2]}"
+}
+
+# Parses options shared by install/run into globals. Unknown flags are fatal.
+parse_options() {
+	while [[ $# -gt 0 ]]; do
+		case "$1" in
+		--name) NAME="${2:?--name needs a value}"; shift 2 ;;
+		--sha256) ISO_SHA256="${2:?--sha256 needs a value}"; shift 2 ;;
+		--share) SHARED_DIRECTORY="${2:?--share needs a value}"; shift 2 ;;
+		--no-share) SHARED_DIRECTORY=""; shift ;;
+		--size) parse_size "${2:?--size needs a value}"; shift 2 ;;
+		--disk) DISK_SIZE="${2:?--disk needs a value}"; shift 2 ;;
+		--memory) MEMORY="${2:?--memory needs a value}"; shift 2 ;;
+		--cpus) CPU_CORES="${2:?--cpus needs a value}"; shift 2 ;;
+		--iso) ATTACH_ISO=1; shift ;;
+		*) die "unknown option '$1'" ;;
+		esac
+	done
+}
+
+# Lowest port >= SSH_PORT_START not used by another VM config or a listening socket.
+next_free_ssh_port() {
+	local port="${SSH_PORT_START}" used
+	used="$(
+		{
+			cat "${BASE_DIR}"/*/config 2>/dev/null | sed -n 's/^SSH_HOST_PORT="\?\([0-9]*\)"\?$/\1/p' || true
+			ss -Hltn 2>/dev/null | awk '{print $4}' | sed 's/.*://' || true
+		} | sort -u
+	)"
+	while grep -qx "${port}" <<<"${used}"; do
+		port=$((port + 1))
+	done
+	echo "${port}"
+}
+
+resolve_iso() {
+	local source="$1" file
+	if [[ "${source}" =~ ^https?:// ]]; then
+		file="${ISO_CACHE}/$(basename "${source}")"
+		if [[ -f "${file}" ]]; then
+			echo "Using cached ISO ${file}" >&2
+		else
+			mkdir -p "${ISO_CACHE}"
+			echo "Downloading ${source}" >&2
+			curl -L --fail --progress-bar -o "${file}.part" "${source}" || {
+				rm -f "${file}.part"
+				die "download failed: ${source}"
+			}
+			mv "${file}.part" "${file}"
+		fi
+	else
+		[[ -f "${source}" ]] || die "ISO not found: ${source}"
+		file="$(realpath "${source}")"
+	fi
+	echo "${file}"
+}
+
+verify_iso() {
+	local iso="$1" sha="$2"
+	if [[ -z "${sha}" ]]; then
+		echo "Warning: no --sha256 given, skipping ISO verification" >&2
+		return
+	fi
+	echo "Verifying ISO checksum..." >&2
+	echo "${sha}  ${iso}" | sha256sum --check --status 2>/dev/null || die "ISO checksum mismatch for ${iso}"
+}
+
+write_config() {
+	local dir="$1"
+	cat >"${dir}/config" <<EOF
+ISO="${ISO}"
+ISO_SHA256="${ISO_SHA256}"
+SHARED_DIRECTORY="${SHARED_DIRECTORY}"
+GUEST_WIDTH="${GUEST_WIDTH}"
+GUEST_HEIGHT="${GUEST_HEIGHT}"
+MEMORY="${MEMORY}"
+CPU_CORES="${CPU_CORES}"
+DISK_SIZE="${DISK_SIZE}"
+SSH_HOST_PORT="${SSH_HOST_PORT}"
+EOF
+}
+
+create_disk_and_nvram() {
+	local dir="$1"
+	[[ -f "${dir}/OVMF_VARS.4m.fd" ]] || cp "${OVMF_VARS_TEMPLATE}" "${dir}/OVMF_VARS.4m.fd"
+	[[ -f "${dir}/disk.qcow2" ]] || qemu-img create -f qcow2 "${dir}/disk.qcow2" "${DISK_SIZE}" >/dev/null
+}
+
+launch_vm() {
+	local name="$1" dir
+	dir="$(vm_dir "${name}")"
+
+	local args=(
+		-name "${name}"
+		-machine q35,accel=kvm
+		-cpu host
+		-enable-kvm
+		-smp "${CPU_CORES}"
+		-m "${MEMORY}"
+		-drive "if=pflash,format=raw,readonly=on,file=${OVMF_CODE}"
+		-drive "if=pflash,format=raw,file=${dir}/OVMF_VARS.4m.fd"
+		-drive "file=${dir}/disk.qcow2,format=qcow2,if=none,id=rootdisk,cache=writeback,discard=unmap"
+		-device virtio-blk-pci,drive=rootdisk,bootindex=1
+		-device "virtio-vga-gl,xres=${GUEST_WIDTH},yres=${GUEST_HEIGHT}"
+		-display gtk,gl=on,grab-on-hover=on,zoom-to-fit=on
+		-audiodev pipewire,id=audio0
+		-device intel-hda
+		-device hda-output,audiodev=audio0
+		-netdev "user,id=net0,hostfwd=tcp::${SSH_HOST_PORT}-:22"
+		-device virtio-net-pci,netdev=net0
+		-usb
+		-device usb-tablet
+		-boot menu=on
+	)
+
+	if [[ "${ATTACH_ISO}" == 1 ]]; then
+		[[ -f "${ISO}" ]] || die "ISO not found: ${ISO} (re-download with: qemu-vm install ...)"
+		args+=(
+			-drive "file=${ISO},media=cdrom,if=none,format=raw,id=installer"
+			-device ide-cd,drive=installer,bootindex=2
+		)
+	fi
+
+	if [[ -n "${SHARED_DIRECTORY}" ]]; then
+		[[ -d "${SHARED_DIRECTORY}" ]] || die "shared directory not found: ${SHARED_DIRECTORY}"
+		args+=(-virtfs "local,path=${SHARED_DIRECTORY},mount_tag=${SHARE_TAG},security_model=mapped-xattr,id=${SHARE_TAG}")
+	fi
+
+	echo "Starting '${name}' (${GUEST_WIDTH}x${GUEST_HEIGHT}, ${MEMORY}MB, ${CPU_CORES} cpus)"
+	echo "  SSH:   ssh -p ${SSH_HOST_PORT} <user>@localhost"
+	if [[ -n "${SHARED_DIRECTORY}" ]]; then
+		echo "  Share: ${SHARED_DIRECTORY} -> mount in guest with:"
+		echo "         sudo mkdir -p /mnt/${SHARE_TAG}"
+		echo "         sudo mount -t 9p -o trans=virtio,version=9p2000.L ${SHARE_TAG} /mnt/${SHARE_TAG}"
+		echo "         persist via /etc/fstab:"
+		echo "         ${SHARE_TAG} /mnt/${SHARE_TAG} 9p trans=virtio,version=9p2000.L,nofail,_netdev 0 0"
+	fi
+
+	exec qemu-system-x86_64 "${args[@]}"
+}
+
+cmd_install() {
+	local source="${1:-}"
+	[[ -n "${source}" ]] || die "install needs an ISO path or URL"
+	shift
+
+	NAME=""
+	ISO_SHA256=""
+	SHARED_DIRECTORY="${DEFAULT_SHARED_DIRECTORY}"
+	GUEST_WIDTH="${DEFAULT_GUEST_WIDTH}"
+	GUEST_HEIGHT="${DEFAULT_GUEST_HEIGHT}"
+	DISK_SIZE="${DEFAULT_DISK_SIZE}"
+	MEMORY="${DEFAULT_MEMORY}"
+	CPU_CORES="${DEFAULT_CPU_CORES}"
+	ATTACH_ISO=1
+	parse_options "$@"
+
+	if [[ -z "${NAME}" ]]; then
+		NAME="$(basename "${source}")"
+		NAME="${NAME%.iso}"
+	fi
+	[[ "${NAME}" =~ ^[A-Za-z0-9._-]+$ ]] || die "invalid VM name '${NAME}'"
+	[[ -z "${SHARED_DIRECTORY}" || -d "${SHARED_DIRECTORY}" ]] || die "shared directory not found: ${SHARED_DIRECTORY} (use --share DIR or --no-share)"
+
+	local dir
+	dir="$(vm_dir "${NAME}")"
+	[[ ! -e "${dir}" ]] || die "VM '${NAME}' already exists (use: qemu-vm run ${NAME}, or --name to pick another)"
+
+	ISO="$(resolve_iso "${source}")"
+	verify_iso "${ISO}" "${ISO_SHA256}"
+
+	SSH_HOST_PORT="$(next_free_ssh_port)"
+
+	mkdir -p "${dir}"
+	chattr +C "${dir}" 2>/dev/null || true
+	write_config "${dir}"
+	create_disk_and_nvram "${dir}"
+
+	echo "Created VM '${NAME}' in ${dir}"
+	launch_vm "${NAME}"
+}
+
+cmd_run() {
+	local name="${1:-}"
+	require_vm "${name}"
+	shift
+	load_config "${name}"
+	ATTACH_ISO=0
+	parse_options "$@"
+	launch_vm "${name}"
+}
+
+cmd_ls() {
+	local dir name
+	shopt -s nullglob
+	for dir in "${BASE_DIR}"/*/; do
+		name="$(basename "${dir}")"
+		[[ -f "${dir}/config" ]] || continue
+		(
+			load_config "${name}"
+			printf '%-20s %8s  ssh:%s  %s\n' \
+				"${name}" \
+				"$(du -sh "${dir}" 2>/dev/null | cut -f1)" \
+				"${SSH_HOST_PORT}" \
+				"${GUEST_WIDTH}x${GUEST_HEIGHT} ${MEMORY}MB ${CPU_CORES}cpu"
+		)
+	done
+}
+
+cmd_rm() {
+	local name="${1:-}"
+	require_vm "${name}"
+	confirm "Delete VM '${name}' and its disk?" || exit 0
+	rm -rf "$(vm_dir "${name}")"
+	echo "Deleted '${name}'"
+}
+
+cmd_reset() {
+	local name="${1:-}" dir
+	require_vm "${name}"
+	dir="$(vm_dir "${name}")"
+	confirm "Wipe disk and NVRAM of '${name}' and boot the installer?" || exit 0
+	load_config "${name}"
+	rm -f "${dir}/disk.qcow2" "${dir}/OVMF_VARS.4m.fd"
+	create_disk_and_nvram "${dir}"
+	ATTACH_ISO=1
+	launch_vm "${name}"
+}
+
+main() {
+	local command="${1:-help}"
+	shift || true
+	case "${command}" in
+	install) cmd_install "$@" ;;
+	run) cmd_run "$@" ;;
+	ls) cmd_ls ;;
+	rm) cmd_rm "$@" ;;
+	reset) cmd_reset "$@" ;;
+	help | -h | --help) usage ;;
+	*) usage >&2; exit 1 ;;
+	esac
+}
+
+main "$@"

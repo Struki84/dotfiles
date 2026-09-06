@@ -143,3 +143,7 @@ tar -xzf $DOTFILES/icons/Vivid-Glassy-Dark.tar.gz -C ~/.local/share/icons/
 gsettings set org.gnome.desktop.interface icon-theme "Vivid-Glassy-Dark-Icons"
 gsettings set org.gnome.desktop.interface gtk-theme "Flat-Remix-GTK-Blue-Darkest"
 gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+
+
+# for setting global editor
+# echo -e 'EDITOR=nvim\nVISUAL=nvim' | sudo tee -a /etc/environment

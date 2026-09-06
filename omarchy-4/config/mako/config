@@ -1,0 +1,16 @@
+include=~/.config/omarchy/current/theme/mako.ini
+
+default-timeout=10000
+ignore-timeout=1
+
+# black glass — matches walker
+background-color=#00000033
+text-color=#ffffff
+border-color=#595959ab
+border-size=1
+border-radius=5
+padding=10,15
+margin=10
+
+[urgency=high]
+border-color=#595959ab
