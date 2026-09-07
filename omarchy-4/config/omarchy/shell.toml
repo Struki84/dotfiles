@@ -1,0 +1,119 @@
+# User overrides for the Omarchy shell. Merged over the active theme's
+# shell.toml; keys here win and survive theme switches.
+# Full key list: $OMARCHY_PATH/default/themed/shell.toml.tpl
+# Apply changes with: omarchy restart shell
+#
+# Shared palette (keep every section on these so surfaces look alike):
+#   surface   #000000 @ 0.6     card / bar background (translucent so the
+#                               Hyprland blur rule in hypr/user.lua shows)
+#   text      #ffffff
+#   border    #595959 @ 0.67, 1px
+#   muted     #595959           placeholders, unselected chrome
+#   alert     #a55555           errors, countdowns
+#   scrim     #000000 @ 0.0     no full-screen dim behind cards
+
+# BAR --------------------------------------------------------------------------
+[bar]
+background       = "#000000"
+background-alpha = 0.6
+text             = "#ffffff"
+
+# BAR PANELS / FLYOUTS (network, audio, bluetooth, clock, power, OSD) ----------
+[popups]
+background       = "#000000"
+background-alpha = 0.6
+text             = "#ffffff"
+border           = "#595959"
+border-alpha     = 0.67
+border-width     = 1
+
+# TOOLTIPS --------------------------------------------------------------------
+[tooltip]
+background       = "#000000"
+background-alpha = 0.6
+text             = "#ffffff"
+border           = "#595959"
+border-alpha     = 0.67
+border-width     = 1
+
+# NOTIFICATIONS ---------------------------------------------------------------
+[notifications]
+background       = "#000000"
+background-alpha = 0.6
+text             = "#ffffff"
+border           = "#595959"
+border-alpha     = 0.67
+border-width     = 1
+countdown        = "#a55555"
+
+# ROOT MENU (also clipboard + emojis) ----------------------------------------
+[menu]
+background                = "#000000"
+background-alpha          = 0.6
+text                      = "#ffffff"
+border                    = "#595959"
+border-alpha              = 0.67
+border-width              = 1
+scrim                     = "#000000"
+scrim-alpha               = 0.0
+selected-background       = "#000000"
+selected-background-alpha = 1.0
+selected-text             = "#ffffff"
+selected-border           = "#595959"
+selected-border-alpha     = 0.0
+
+# APP LAUNCHER (Alt+Space) -- same tokens as [menu] ---------------------------
+[launcher]
+background                = "#000000"
+background-alpha          = 0.6
+text                      = "#ffffff"
+border                    = "#595959"
+border-alpha              = 0.67
+border-width              = 1
+scrim                     = "#000000"
+scrim-alpha               = 0.0
+selected-background       = "#000000"
+selected-background-alpha = 1.0
+selected-text             = "#ffffff"
+selected-border           = "#595959"
+selected-border-alpha     = 0.0
+
+# POLKIT (sudo / password prompts) --------------------------------------------
+[polkit]
+background       = "#000000"
+background-alpha = 0.6
+text             = "#ffffff"
+text-error       = "#a55555"
+border           = "#595959"
+border-error     = "#a55555"
+border-alpha     = 0.67
+scrim            = "#000000"
+scrim-alpha      = 0.0
+accent           = "#ffffff"
+
+# LOCK SCREEN (password field) ------------------------------------------------
+[lock]
+background       = "#000000"
+background-alpha = 0.6
+text             = "#ffffff"
+placeholder      = "#595959"
+text-error       = "#a55555"
+border           = "#595959"
+border-active    = "#595959"
+border-error     = "#a55555"
+border-alpha     = 0.67
+border           = 1
+selection        = "#ffffff"
+selection-alpha  = 0.35
+
+# IMAGE PICKER (background chooser) -------------------------------------------
+# No card surface here, so the scrim IS the backdrop; keep some dim so the
+# carousel reads against the desktop.
+[image-picker]
+scrim                   = "#000000"
+scrim-alpha             = 0.5
+text                    = "#ffffff"
+selected-border         = "#ffffff"
+selected-border-alpha   = 1.0
+unselected-border       = "#595959"
+unselected-border-alpha = 0.67

@@ -1,0 +1,6 @@
+# Omarchy shell plugins installed by setup.sh (one git URL per line).
+# Plugin IDs referenced in config/omarchy/shell.json must come from this list.
+#   drako.floating-bar + drako.control  <- drako-floating-bar
+#   akshar.radio-atlas                  <- omarchy-radio-atlas
+https://github.com/Jster80/drako-floating-bar
+https://github.com/AksharP5/omarchy-radio-atlas.git

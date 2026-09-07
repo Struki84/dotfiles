@@ -42,11 +42,11 @@ omarchy pkg drop \
 
 # Default web app launchers (omarchy-webapp-remove).
 # Names must match the shipped .desktop EXACTLY — case and spaces included.
-omarchy webapp remove \
+# One call per name: omarchy-webapp-remove joins all its args into a single name.
+# Only names Omarchy 4 actually ships are listed (see $OMARCHY_PATH/default/applications).
+for webapp in \
   "Basecamp" \
-  "ChatGPT" \
   "Discord" \
-  "Fizzy" \
   "Google Contacts" \
   "Google Messages" \
   "Google Photos" \
@@ -54,5 +54,6 @@ omarchy webapp remove \
   "WhatsApp" \
   "X" \
   "YouTube" \
-  "Zoom" \ 
-  "Github"
+  "Zoom"; do
+  OMARCHY_REMOVE_NOTIFY=false omarchy webapp remove "$webapp" || true
+done

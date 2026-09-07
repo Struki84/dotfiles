@@ -8,5 +8,5 @@ export GOPATH=$HOME/.go
 
 add_to_path /usr/local/bin
 add_to_path /usr/local/go/bin
-add_to_path $DOTFILES/omarchy/bin
+add_to_path $DOTFILES/omarchy-4/bin
 add_to_path $GOPATH/bin
