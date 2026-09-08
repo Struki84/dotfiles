@@ -63,9 +63,6 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git \
 link "$OMA/zsh/zshrc" ~/.zshrc
 
 # PERSONAL BIN SCRIPTS -------------------------------------------------------------
-# Omarchy 4 puts ~/.local/bin on the session PATH (Hyprland autostart, terminals,
-# launchers), so linking here is what makes e.g. `torrent-sentry` resolvable
-# from hypr/user.lua. (~/.config/uwsm/env was retired in v4.)
 mkdir -p ~/.local/bin
 for script in "$OMA"/bin/*; do
   [ -f "$script" ] || continue
@@ -132,40 +129,6 @@ ensure_line 'require("hypr.user")' ~/.config/hypr/hyprland.lua
 # shell.toml is read-only for the shell -> symlink is safe.
 link "$CFG/omarchy/shell.toml" ~/.config/omarchy/shell.toml
 
-# Shell plugins referenced by shell.json. Install before copying shell.json so
-# the plugin's own layout edits get replaced by mine. Plugins are git clones in
-# ~/.config/omarchy/plugins/<id>/, so match on the git remote, not the dir name.
-plugin_installed() {
-  local want="${1%/}"; want="${want%.git}"
-  local dir have
-  for dir in ~/.config/omarchy/plugins/*/; do
-    [ -d "$dir/.git" ] || continue
-    have="$(git -C "$dir" remote get-url origin 2>/dev/null)" || continue
-    have="${have%/}"; have="${have%.git}"
-    [ "$have" = "$want" ] && return 0
-  done
-  return 1
-}
-
-if command -v omarchy-plugin-add >/dev/null; then
-  while IFS= read -r url; do
-    url="${url%%#*}"
-    url="$(echo "$url" | xargs)"
-    [ -n "$url" ] || continue
-    if plugin_installed "$url"; then
-      echo "ℹ plugin already present: $url"
-      continue
-    fi
-    omarchy plugin add "$url" --enable --yes || echo "⚠ plugin install failed: $url"
-  done <"$OMA/plugins.txt"
-else
-  echo "⚠ omarchy-plugin-add not found — skipping shell plugins (not Omarchy 4?)"
-fi
-
-# shell.json is REWRITTEN by Omarchy (omarchy bar add/move, drag-reorder, plugin
-# enable) via mv, which would replace a symlink. Copy it instead; only seed when
-# absent so live tweaks survive re-runs. Use --force to overwrite from the repo.
-# Push local changes back with: save-dot-shell
 if [ ! -s ~/.config/omarchy/shell.json ] || [ "$FORCE" -eq 1 ]; then
   cp -f "$CFG/omarchy/shell.json" ~/.config/omarchy/shell.json
   echo "shell.json copied to ~/.config/omarchy/"

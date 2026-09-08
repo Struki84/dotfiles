@@ -13,11 +13,6 @@ alias asai="~/Engineering/Projects/ASAI/SourceCode"
 alias clipt="~/Engineering/Libraries/clipt/"
 alias dot="~/.dotfiles"
 
-# Omarchy rewrites ~/.config/omarchy/shell.json (bar layout) in place, so it's
-# copied rather than symlinked by setup.sh. Run this after tweaking the bar to
-# push the live file back into the repo.
-alias save-dot-shell='cp ~/.config/omarchy/shell.json "$DOTFILES/omarchy-4/config/omarchy/shell.json" && echo "shell.json saved to dotfiles"'
-
 alias lg="lazygit"
 
 export SUDO_EDITOR="nvim"
