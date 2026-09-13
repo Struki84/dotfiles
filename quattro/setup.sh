@@ -29,6 +29,29 @@ ensure_line() {
   grep -qxF "$line" "$file" 2>/dev/null || echo "$line" >>"$file"
 }
 
+# PREFLIGHT -------------------------------------------------------------------
+# Anything that needs a human. Checked before the slow parts so a fresh machine
+# stops in the first second instead of ten minutes into the AUR builds.
+echo "Running preflight checks..."
+
+# gh verifies the omacalendar release attestation in install.sh.
+command -v gh >/dev/null || omarchy pkg add github-cli || true
+
+if ! command -v gh >/dev/null; then
+  echo "✗ github-cli is not installed and could not be installed automatically."
+  echo "  Install it, then re-run this script."
+  exit 1
+fi
+
+if ! gh auth status &>/dev/null; then
+  echo "✗ GitHub CLI is not authenticated."
+  echo "  Run:  gh auth login"
+  echo "  Then re-run this script."
+  exit 1
+fi
+
+echo "done!"
+
 # CREATE DIRECTORIES -------------------------------------------------------------
 echo "Creating user directories..."
 
@@ -128,15 +151,12 @@ link "$CFG/omarchy/shell.toml" ~/.config/omarchy/shell.toml
 cp -f "$CFG/omarchy/shell.json" ~/.config/omarchy/shell.json
 echo "shell.json copied to ~/.config/omarchy/"
 
-# WIP -------------------------------------------------------------
-
 # --- Git identity ------------------------------------------------------------
 git config --global user.email simun.strukan@gmail.com
 git config --global user.name "Simun Strukan"
 
 # --- Hiding unneeded apps from the launcher ---------------------------------
 mkdir -p ~/.local/share/applications/hidden/
-cp "$OMA/applications/hidden/rtng-bookmark-editor.desktop" ~/.local/share/applications/hidden/
 cp "$OMA/applications/hidden/winetricks.desktop" ~/.local/share/applications/hidden/
 
 update-desktop-database ~/.local/share/applications
@@ -150,7 +170,7 @@ link "$CFG/omarchy/hooks/theme-set.d/gtk-user.sh" \
 bash "$CFG/omarchy/hooks/theme-set.d/gtk-user.sh" || true
 
 # for setting global editor
-# echo -e 'EDITOR=nvim\nVISUAL=nvim' | sudo tee -a /etc/environment
+echo -e 'EDITOR=nvim\nVISUAL=nvim' | sudo tee -a /etc/environment
 
 # APPLY -------------------------------------------------------------
 if command -v hyprctl >/dev/null && [ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]; then

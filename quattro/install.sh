@@ -5,6 +5,17 @@ set -eEo pipefail
 # omarchy pkg add      -> official + OPR repos (pacman)
 # omarchy pkg aur add  -> AUR (yay)
 
+# --- Omarchy shell plugins (one git URL per line) -----------------------------
+# Plugin IDs referenced in config/omarchy/shell.json must come from this list.
+#   drako.floating-bar + drako.control  <- drako-floating-bar
+#   akshar.radio-atlas                  <- omarchy-radio-atlas
+PLUGINS=(
+  https://github.com/Jster80/drako-floating-bar
+  https://github.com/AksharP5/omarchy-radio-atlas.git
+  https://github.com/brdweb/omacalendar-widget.git
+  https://github.com/huacnlee/omamail.git
+)
+
 # --- Official / OPR packages -------------------------------------------------
 omarchy pkg add \
   solaar \
@@ -23,7 +34,6 @@ omarchy pkg aur add \
   notion-app-electron \
   xmind \
   rslsync \
-  flat-remix-gtk \
   thunderbird-bin \
   vesktop \
   brave-bin \
@@ -31,12 +41,54 @@ omarchy pkg aur add \
   1password \
   alacritty \
   || echo "⚠ AUR packages: some failed — continuing"
+  # flat-remix-gtk \
 
-# omarchy pkg aur add plex-desktop || echo "⚠ plex-desktop build failed (flaky upstream .deb) — install manually"
+omarchy pkg aur add plex-desktop || echo "⚠ plex-desktop build failed (flaky upstream .deb) — install manually"
+
+# --- OmaCalendar app (required by the org.omacalendar.widget plugin) ---------
+# Release is verified against SHA256SUMS and GitHub build attestations before
+# it's handed to pacman. Needs github-cli, and `gh auth login` done once.
+install_omacalendar() {
+  local version=1.0.0
+  local package="omacalendar-${version}-1-x86_64.pkg.tar.zst"
+  local release_url="https://github.com/brdweb/omacalendar/releases/download/v${version}"
+  local workdir
+
+  workdir=$(mktemp -d)
+  pushd "$workdir" >/dev/null
+
+  curl -fLO "${release_url}/${package}"
+  curl -fLO "${release_url}/SHA256SUMS"
+  grep " ${package}$" SHA256SUMS | sha256sum --check --strict
+
+  gh attestation verify "$package" --repo brdweb/omacalendar \
+    --source-ref "refs/tags/v${version}" \
+    --signer-workflow brdweb/omacalendar/.github/workflows/release.yml
+  gh attestation verify "$package" --repo brdweb/omacalendar \
+    --source-ref "refs/tags/v${version}" \
+    --signer-workflow brdweb/omacalendar/.github/workflows/release.yml \
+    --predicate-type https://spdx.dev/Document/v2.3
+
+  sudo pacman -U --noconfirm "./${package}"
+
+  popd >/dev/null
+  rm -rf "$workdir"
+
+  systemctl --user daemon-reload
+  systemctl --user enable --now omacalendard.socket
+  systemctl --user try-restart omacalendard.service
+  xdg-mime default org.omacalendar.OmaCalendar.desktop x-scheme-handler/omacalendar
+}
+
+if pacman -Q omacalendar &>/dev/null; then
+  echo "omacalendar present: $(pacman -Q omacalendar)"
+elif ! command -v gh >/dev/null; then
+  echo "⚠ github-cli not installed — skipping omacalendar (the calendar widget will show no events)"
+else
+  install_omacalendar || echo "⚠ omacalendar install failed — continuing"
+fi
 
 # --- Omarchy shell plugins (bar/panel widgets) -------------------------------
-PLUGINS_TXT="$(dirname "$(readlink -f "$0")")/plugins.txt"
-
 plugin_id_for_url() {
   local want="${1%/}"; want="${want%.git}"
   local dir have
@@ -54,11 +106,8 @@ plugin_enabled() {
     jq -e --arg id "$1" 'any(.[]; .id == $id and .enabled)' >/dev/null
 }
 
-if command -v omarchy-plugin-add >/dev/null && [ -f "$PLUGINS_TXT" ]; then
-  while IFS= read -r url; do
-    url="${url%%#*}"
-    url="$(echo "$url" | xargs)"
-    [ -n "$url" ] || continue
+if command -v omarchy-plugin-add >/dev/null; then
+  for url in "${PLUGINS[@]}"; do
     if id=$(plugin_id_for_url "$url"); then
       echo "plugin present: $id"
     else
@@ -66,9 +115,9 @@ if command -v omarchy-plugin-add >/dev/null && [ -f "$PLUGINS_TXT" ]; then
       id=$(plugin_id_for_url "$url") || continue
     fi
     plugin_enabled "$id" || omarchy plugin enable "$id" || echo "plugin enable failed: $id"
-  done <"$PLUGINS_TXT"
+  done
 else
-  echo "omarchy-plugin-add or plugins.txt not found — skipping shell plugins"
+  echo "omarchy-plugin-add not found — skipping shell plugins"
 fi
 
 # --- Remove Omarchy default apps I don't use ---------------------------------
