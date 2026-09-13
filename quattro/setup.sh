@@ -147,9 +147,24 @@ ensure_line 'require("hypr.user")' ~/.config/hypr/hyprland.lua
 # OMARCHY SHELL -------------------------------------------------------------
 link "$CFG/omarchy/shell.toml" ~/.config/omarchy/shell.toml
 
+if [ -d "$CFG/omarchy/plugins" ]; then
+  mkdir -p ~/.config/omarchy/plugins
+  for plugin in "$CFG"/omarchy/plugins/*/; do
+    [ -d "$plugin" ] || continue
+    name="$(basename "$plugin")"
+    rm -rf ~/.config/omarchy/plugins/"$name"
+    cp -a "$plugin" ~/.config/omarchy/plugins/"$name"
+    echo "plugin copied: $name"
+  done
+fi
+
 [ -e ~/.config/omarchy/shell.json ] && [ ! -e ~/.config/omarchy/shell.json.bak ] && cp ~/.config/omarchy/shell.json ~/.config/omarchy/shell.json.bak
 cp -f "$CFG/omarchy/shell.json" ~/.config/omarchy/shell.json
 echo "shell.json copied to ~/.config/omarchy/"
+
+link "$CFG/omarchy/scripts" "~/.config/omarchy/scripts" 
+
+# WIP -------------------------------------------------------------
 
 # --- Git identity ------------------------------------------------------------
 git config --global user.email simun.strukan@gmail.com
@@ -157,6 +172,7 @@ git config --global user.name "Simun Strukan"
 
 # --- Hiding unneeded apps from the launcher ---------------------------------
 mkdir -p ~/.local/share/applications/hidden/
+cp "$OMA/applications/hidden/rtng-bookmark-editor.desktop" ~/.local/share/applications/hidden/
 cp "$OMA/applications/hidden/winetricks.desktop" ~/.local/share/applications/hidden/
 
 update-desktop-database ~/.local/share/applications
