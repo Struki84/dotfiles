@@ -29,19 +29,19 @@ omarchy pkg add \
 # --- AUR packages ------------------------------------------------------------
 # Note: plex-desktop's PKGBUILD pulls a .deb from Plex that has been flaky;
 # if it fails to build, that's an upstream source issue, not the script.
+# thunderbird-bin \
+# flat-remix-gtk \
 omarchy pkg aur add \
   ferdium-bin \
   notion-app-electron \
   xmind \
   rslsync \
-  thunderbird-bin \
   vesktop \
   brave-bin \
   1password-cli \
   1password \
   alacritty \
   || echo "⚠ AUR packages: some failed — continuing"
-  # flat-remix-gtk \
 
 omarchy pkg aur add plex-desktop || echo "⚠ plex-desktop build failed (flaky upstream .deb) — install manually"
 
