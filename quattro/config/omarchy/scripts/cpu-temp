@@ -1,0 +1,6 @@
+#!/bin/bash
+
+zone=/sys/class/thermal/thermal_zone0/temp
+[[ -r $zone ]] || exit 0
+
+printf '󰍛 %d°C\n' "$(( $(< "$zone") / 1000 ))"

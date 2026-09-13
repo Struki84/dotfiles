@@ -4,3 +4,5 @@
 #   akshar.radio-atlas                  <- omarchy-radio-atlas
 https://github.com/Jster80/drako-floating-bar
 https://github.com/AksharP5/omarchy-radio-atlas.git
+https://github.com/brdweb/omacalendar-widget.git
+https://github.com/huacnlee/omamail.git

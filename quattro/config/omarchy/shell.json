@@ -1,0 +1,112 @@
+{
+  "bar": {
+    "accentLine": false,
+    "border": false,
+    "centerAnchor": "omarchy.clock",
+    "cornerRadius": 4,
+    "floatGap": 4,
+    "id": "drako.floating-bar",
+    "layout": {
+      "center": [
+        {
+          "id": "omarchy.active-window"
+        }
+      ],
+      "left": [
+        {
+          "id": "simun.workspaces",
+          "labels": {
+            "1": "A",
+            "2": "S",
+            "3": "D",
+            "4": "F"
+          }
+        },
+        {
+          "id": "cpu-temp",
+          "exec": "~/.config/omarchy/scripts/cpu-temp",
+          "interval": 2,
+          "onClick": "omarchy-launch-or-focus-tui btop"
+        },
+        {
+          "id": "memory",
+          "exec": "~/.config/omarchy/scripts/memory-used",
+          "interval": 5
+        },
+        {
+          "id": "disk",
+          "exec": "~/.config/omarchy/scripts/disk-free",
+          "interval": 30
+        },
+        {
+          "id": "net-speed",
+          "exec": "~/.config/omarchy/scripts/net-speed",
+          "interval": 2
+        }
+      ],
+      "right": [
+        {
+          "id": "omarchy.indicators"
+        },
+        {
+          "id": "omarchy.keyboard-layout"
+        },
+        {
+          "id": "omarchy.system-update"
+        },
+        {
+          "id": "omarchy.tray"
+        },
+        {
+          "id": "akshar.radio-atlas"
+        },
+        {
+          "id": "omarchy.agents"
+        },
+        {
+          "id": "omarchy.audio"
+        },
+        {
+          "id": "omarchy.bluetooth"
+        },
+        {
+          "id": "omarchy.network"
+        },
+        {
+          "id": "drako.control"
+        },
+        {
+          "id": "omarchy.weather"
+        },
+        {
+          "id": "org.omacalendar.widget",
+          "format": "dddd dd MMM HH:mm",
+          "showUpNext": false,
+          "showCountdown": false
+        },
+        {
+          "id": "omarchy.menu"
+        }
+      ]
+    },
+    "position": "top",
+    "transparent": false,
+    "widthPercent": 100
+  },
+  "idle": {
+    "lock": 2750,
+    "screensaver": 2700
+  },
+  "plugins": [
+    {
+      "id": "simun.osd"
+    }
+  ],
+  "version": 1,
+  "disabledPlugins": [
+    "omarchy.osd"
+  ],
+  "cloneSourceRestores": [
+    "simun.osd"
+  ]
+}

@@ -11,7 +11,8 @@ omarchy pkg add \
   dbeaver \
   zsh \
   wget \
-  inotify-tools
+  inotify-tools \
+  || echo "⚠ official packages: some failed — continuing"
 
 
 # --- AUR packages ------------------------------------------------------------
@@ -22,29 +23,35 @@ omarchy pkg aur add \
   notion-app-electron \
   xmind \
   rslsync \
-  morgen-bin \
   flat-remix-gtk \
   thunderbird-bin \
   vesktop \
   brave-bin \
   1password-cli \
-  1password
+  1password \
+  alacritty \
+  || echo "⚠ AUR packages: some failed — continuing"
 
 # omarchy pkg aur add plex-desktop || echo "⚠ plex-desktop build failed (flaky upstream .deb) — install manually"
 
 # --- Omarchy shell plugins (bar/panel widgets) -------------------------------
 PLUGINS_TXT="$(dirname "$(readlink -f "$0")")/plugins.txt"
 
-plugin_installed() {
+plugin_id_for_url() {
   local want="${1%/}"; want="${want%.git}"
   local dir have
   for dir in ~/.config/omarchy/plugins/*/; do
     [ -d "$dir/.git" ] || continue
     have="$(git -C "$dir" remote get-url origin 2>/dev/null)" || continue
     have="${have%/}"; have="${have%.git}"
-    [ "$have" = "$want" ] && return 0
+    if [ "$have" = "$want" ]; then basename "$dir"; return 0; fi
   done
   return 1
+}
+
+plugin_enabled() {
+  omarchy plugin list --json 2>/dev/null |
+    jq -e --arg id "$1" 'any(.[]; .id == $id and .enabled)' >/dev/null
 }
 
 if command -v omarchy-plugin-add >/dev/null && [ -f "$PLUGINS_TXT" ]; then
@@ -52,14 +59,16 @@ if command -v omarchy-plugin-add >/dev/null && [ -f "$PLUGINS_TXT" ]; then
     url="${url%%#*}"
     url="$(echo "$url" | xargs)"
     [ -n "$url" ] || continue
-    if plugin_installed "$url"; then
-      echo "ℹ plugin already present: $url"
-      continue
+    if id=$(plugin_id_for_url "$url"); then
+      echo "plugin present: $id"
+    else
+      omarchy plugin add "$url" --enable --yes || echo "plugin install failed: $url"
+      id=$(plugin_id_for_url "$url") || continue
     fi
-    omarchy plugin add "$url" --enable --yes || echo "⚠ plugin install failed: $url"
+    plugin_enabled "$id" || omarchy plugin enable "$id" || echo "plugin enable failed: $id"
   done <"$PLUGINS_TXT"
 else
-  echo "⚠ omarchy-plugin-add or plugins.txt not found — skipping shell plugins"
+  echo "omarchy-plugin-add or plugins.txt not found — skipping shell plugins"
 fi
 
 # --- Remove Omarchy default apps I don't use ---------------------------------
@@ -70,12 +79,11 @@ omarchy pkg drop \
   obsidian \
   signal-desktop \
   typora \
-  xournalpp
+  xournalpp \
+  || echo "⚠ package removal: some failed — continuing"
 
 # Default web app launchers (omarchy-webapp-remove).
 # Names must match the shipped .desktop EXACTLY — case and spaces included.
-# One call per name: omarchy-webapp-remove joins all its args into a single name.
-# Only names Omarchy 4 actually ships are listed (see $OMARCHY_PATH/default/applications).
 for webapp in \
   "Basecamp" \
   "Discord" \

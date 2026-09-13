@@ -5,7 +5,7 @@
 set -eEo pipefail
 
 export DOTFILES="${DOTFILES:-$HOME/.dotfiles}"
-OMA="$DOTFILES/omarchy-4"
+OMA="$DOTFILES/quattro/"
 CFG="$OMA/config"
 FORCE=0
 [[ ${1:-} == "--force" ]] && FORCE=1
@@ -118,23 +118,15 @@ tmux new-session -d -s __tpm_install 2>/dev/null || true
 tmux kill-session -t __tpm_install 2>/dev/null || true
 
 # HYPRLAND -------------------------------------------------------------
-# Omarchy 4 configures Hyprland in Lua. user.lua is loaded last from
-# ~/.config/hypr/hyprland.lua so it overrides Omarchy's defaults.
-# NOTE: `omarchy refresh hyprland` rewrites hyprland.lua; re-run this script after.
 link "$CFG/hypr/user.lua" ~/.config/hypr/user.lua
 ensure_line 'require("hypr.user")' ~/.config/hypr/hyprland.lua
 
-# OMARCHY SHELL (bar, panels, menu) -------------------------------------------------------------
-
-# shell.toml is read-only for the shell -> symlink is safe.
+# OMARCHY SHELL -------------------------------------------------------------
 link "$CFG/omarchy/shell.toml" ~/.config/omarchy/shell.toml
 
-if [ ! -s ~/.config/omarchy/shell.json ] || [ "$FORCE" -eq 1 ]; then
-  cp -f "$CFG/omarchy/shell.json" ~/.config/omarchy/shell.json
-  echo "shell.json copied to ~/.config/omarchy/"
-else
-  echo "ℹ ~/.config/omarchy/shell.json exists — left as is (use --force to overwrite)"
-fi
+[ -e ~/.config/omarchy/shell.json ] && [ ! -e ~/.config/omarchy/shell.json.bak ] && cp ~/.config/omarchy/shell.json ~/.config/omarchy/shell.json.bak
+cp -f "$CFG/omarchy/shell.json" ~/.config/omarchy/shell.json
+echo "shell.json copied to ~/.config/omarchy/"
 
 # WIP -------------------------------------------------------------
 
@@ -151,10 +143,8 @@ update-desktop-database ~/.local/share/applications
 
 # --- Styling GTK ui and icons ----------------------------------------------
 mkdir -p ~/.local/share/icons
-tar -xzf "$OMA/icons/Vivid-Glassy-Dark-Icons.tar.gz" -C ~/.local/share/icons/
+tar --warning=no-unknown-keyword -xzf "$OMA/icons/Vivid-Glassy-Dark-Icons.tar.gz" -C ~/.local/share/icons/
 
-# omarchy-theme-set-gnome resets gtk/icon theme on every theme change; the hook
-# re-applies mine afterwards. Run it once now too.
 link "$CFG/omarchy/hooks/theme-set.d/gtk-user.sh" \
   ~/.config/omarchy/hooks/theme-set.d/gtk-user.sh
 bash "$CFG/omarchy/hooks/theme-set.d/gtk-user.sh" || true
@@ -163,7 +153,6 @@ bash "$CFG/omarchy/hooks/theme-set.d/gtk-user.sh" || true
 # echo -e 'EDITOR=nvim\nVISUAL=nvim' | sudo tee -a /etc/environment
 
 # APPLY -------------------------------------------------------------
-# No-ops when run from a TTY without a session.
 if command -v hyprctl >/dev/null && [ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]; then
   hyprctl reload >/dev/null && hyprctl configerrors || true
 fi
