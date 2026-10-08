@@ -3,5 +3,5 @@
 awk '
   /^MemTotal:/     { total = $2 }
   /^MemAvailable:/ { available = $2 }
-  END { printf " %.1fGiB\n", (total - available) / 1048576 }
+  END { printf "\uefc5  %.1fGiB\n", (total - available) / 1048576 }
 ' /proc/meminfo
