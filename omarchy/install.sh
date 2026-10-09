@@ -22,7 +22,36 @@ omarchy pkg aur add \
   notion-app-electron \
   xmind \
   radiotray-ng-git \
-  rslsync
+  rslsync \
+  morgen-bin \
+  flat-remix-gtk \
+  thunderbird-bin
 
 omarchy pkg aur add plex-desktop || echo "⚠ plex-desktop build failed (flaky upstream .deb) — install manually"
 
+# --- Remove Omarchy default apps I don't use ---------------------------------
+# Native packages. omarchy pkg drop == omarchy-pkg-drop -> pacman -Rns.
+# Idempotent: it checks `pacman -Q` first and silently skips anything not installed.
+omarchy pkg drop \
+  kdenlive \
+  obsidian \
+  signal-desktop \
+  typora \
+  xournalpp
+
+# Default web app launchers (omarchy-webapp-remove).
+# Names must match the shipped .desktop EXACTLY — case and spaces included.
+omarchy webapp remove \
+  "Basecamp" \
+  "ChatGPT" \
+  "Discord" \
+  "Fizzy" \
+  "Google Contacts" \
+  "Google Messages" \
+  "Google Photos" \
+  "HEY" \
+  "WhatsApp" \
+  "X" \
+  "YouTube" \
+  "Zoom" \ 
+  "Github"

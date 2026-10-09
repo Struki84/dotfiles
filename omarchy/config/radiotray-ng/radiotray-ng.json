@@ -1,10 +1,10 @@
 {
-	"bookmarks" : "~/.config/radiotray-ng/bookmarks.json",
-	"last-station" : "Yammat FM",
+	"bookmarks" : "/home/simun/.config/radiotray-ng/bookmarks.json",
+	"last-station" : "Classic JAZZ",
 	"last-station-group" : "root",
 	"last-station-notifications" : true,
 	"notification-verbose" : true,
-	"notifications" : false,
+	"notifications" : true,
 	"split-title" : true,
-	"volume-level" : 100
+	"volume-level" : 101
 }

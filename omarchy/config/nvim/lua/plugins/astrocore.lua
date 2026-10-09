@@ -3,6 +3,14 @@ return {
   "AstroNvim/astrocore",
   ---@type AstroCoreOpts
   opts = {
+    diagnostics = {
+      severity_sort = true,
+      virtual_text = { severity = { vim.diagnostic.severity.ERROR, vim.diagnostic.severity.WARN } },
+      signs = { severity = { vim.diagnostic.severity.ERROR, vim.diagnostic.severity.WARN } },
+      underline = { severity = { vim.diagnostic.severity.ERROR, vim.diagnostic.severity.WARN } },
+      update_in_insert = false,
+    },
+
     mappings = {
       n = {
         ["<M-J>"] = { "<C-d>zz", desc = "Move half page down and center" },

@@ -44,7 +44,7 @@ return {
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)
           vim.keymap.set("n", "K", function()
-            vim.lsp.buf.hover({ border = "rounded" })  -- Change to "rounded", "double", etc., if preferred
+            vim.lsp.buf.hover({ border = "rounded" }) -- Change to "rounded", "double", etc., if preferred
           end, { buffer = args.buf })
         end,
       })
