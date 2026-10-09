@@ -1,0 +1,3 @@
+#!/bin/bash
+
+printf '󰋊 %s\n' "$(df -B1 --output=avail / | tail -1 | numfmt --to=iec-i --format='%.1f' --suffix=B)"

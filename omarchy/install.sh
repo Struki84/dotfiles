@@ -7,12 +7,12 @@ set -eEo pipefail
 
 # --- Official / OPR packages -------------------------------------------------
 omarchy pkg add \
-  remmina \
   solaar \
   dbeaver \
   zsh \
   wget \
-  inotify-tools 
+  inotify-tools
+
 
 # --- AUR packages ------------------------------------------------------------
 # Note: plex-desktop's PKGBUILD pulls a .deb from Plex that has been flaky;
@@ -25,7 +25,8 @@ omarchy pkg aur add \
   rslsync \
   morgen-bin \
   flat-remix-gtk \
-  thunderbird-bin
+  thunderbird-bin \
+  vesktop
 
 omarchy pkg aur add plex-desktop || echo "⚠ plex-desktop build failed (flaky upstream .deb) — install manually"
 

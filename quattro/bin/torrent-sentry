@@ -1,0 +1,10 @@
+#!/bin/bash
+
+TARGET_DIR="$HOME/Downloads"
+DEST_DIR="$HOME/Downloads/!Torrents"
+
+mkdir -p "$DEST_DIR"
+
+inotifywait -m -e create -e moved_to -q --format '%w%f' "$TARGET_DIR" | while read -r path; do
+  [[ "$path" == *.torrent ]] && mv "$path" "$DEST_DIR/"
+done

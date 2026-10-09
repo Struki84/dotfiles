@@ -1,0 +1,42 @@
+#!/bin/bash
+
+state="${XDG_RUNTIME_DIR:-/tmp}/omarchy-bar-net-speed"
+
+read -r received transmitted <<< "$(awk 'NR > 2 {
+  gsub(/:/, "", $1)
+  if ($1 != "lo") { rx += $2; tx += $10 }
+} END { print rx + 0, tx + 0 }' /proc/net/dev)"
+
+timestamp=$(date +%s)
+
+if [[ -r $state ]]; then
+  read -r previous_received previous_transmitted previous_timestamp < "$state"
+else
+  previous_received=$received
+  previous_transmitted=$transmitted
+  previous_timestamp=$(( timestamp - 1 ))
+fi
+
+printf '%s %s %s\n' "$received" "$transmitted" "$timestamp" > "$state"
+
+awk -v received="$received" -v transmitted="$transmitted" \
+    -v previous_received="$previous_received" \
+    -v previous_transmitted="$previous_transmitted" \
+    -v elapsed="$(( timestamp - previous_timestamp ))" '
+function humanize(bits,   units, index_unit) {
+  split("b kb Mb Gb", units, " ")
+  index_unit = 1
+  while (bits >= 1000 && index_unit < 4) {
+    bits /= 1000
+    index_unit++
+  }
+  return sprintf("%.1f%s/s", bits, units[index_unit])
+}
+BEGIN {
+  if (elapsed <= 0) elapsed = 1
+  down = (received - previous_received) * 8 / elapsed
+  up = (transmitted - previous_transmitted) * 8 / elapsed
+  if (down < 0) down = 0
+  if (up < 0) up = 0
+  printf "󰇚 %s 󰕒 %s\n", humanize(down), humanize(up)
+}'
