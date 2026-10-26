@@ -1,9 +1,13 @@
 # kamino
 
 Setup for **kamino**, a 2018 Mac mini (A1993, T2) running headless Ubuntu Server
-24.04. It runs Plex Media Server and gets its media from the Synology NAS
-**geonosis** (`192.168.1.9`) over **SMB**, the same way the old macOS Plex
-server did. Nothing needs to change on the NAS.
+24.04. It runs Plex Media Server and gets its media from a Synology NAS over
+**SMB**, the same way the old macOS Plex server did. Nothing needs to change on
+the NAS.
+
+The NAS IP and username are deliberately **not** in this repo. They live only
+in the gitignored `config.env` on kamino. Placeholders below: `<NAS_IP>`,
+`<user>`.
 
 `setup.sh` takes a clean Ubuntu Server install (with OpenSSH) to a working Plex
 server with the NAS shares mounted permanently. It is idempotent: re-running it
@@ -24,25 +28,46 @@ kamino/
 Nothing to set up on the Synology: SMB is already on (the Mac uses it). Have
 these ready:
 
+- **NAS IP:** a fixed IPv4 address. Recommended: a **DHCP reservation** for the
+  NAS, and ideally for kamino, in the router so the IPs never change.
 - **Share names:** the Synology shared folder names, exactly as in Finder on
-  the Mac (*Go → Connect to Server → smb://192.168.1.9*) or in DSM under
-  *Control Panel → Shared Folder*. They are case-sensitive (`Movies` ≠ `movies`).
-  Only letters, digits, `.`, `_`, `-`; no spaces.
+  the Mac (*Go → Connect to Server → smb://<NAS_IP>*) or in DSM under
+  *Control Panel → Shared Folder*. They are case-sensitive (`Movies` ≠ `movies`),
+  and spaces are fine (see below).
 - **Synology username and password:** the account the Mac logs in with. It
   needs at least read access to those shares.
-- Recommended: a **DHCP reservation** for geonosis (`192.168.1.9`), and ideally
-  for kamino, in the router so the IPs never change.
 
 Optional and safer: create a dedicated Synology user (e.g. `kamino`) with
 **read-only** access to the media shares, and use that instead of your own
 account. Then the password stored on kamino can only read media.
+
+### Share names and local folders
+`NAS_SHARES` is a bash array with one quoted name per share:
+
+```bash
+NAS_SHARES=("Data" "Movie Library" "TV Library" "Music Library")
+```
+
+Each share mounts at a folder named after it, in lowercase with dashes, so the
+local paths never contain spaces (easier over SSH, in Plex, and in systemd):
+
+| Synology share | Mounted at |
+|---|---|
+| `Data` | `/mnt/nas/data` |
+| `Movie Library` | `/mnt/nas/movie-library` |
+| `TV Library` | `/mnt/nas/tv-library` |
+| `Music Library` | `/mnt/nas/music-library` |
+
+Accents are simplified (`Čarobni` → `carobni`). The script stops with a clear
+message if a name contains `/ \ , "`, or if two shares would land on the same
+folder. **Plex only starts once every listed share is mounted.**
 
 ## 2. Run on a fresh install
 
 ```bash
 git clone https://github.com/Struki84/dotfiles ~/.dotfiles
 cd ~/.dotfiles/kamino
-cp config.env.example config.env && nano config.env   # NAS_USERNAME, NAS_SHARES
+cp config.env.example config.env && nano config.env   # NAS_HOST, NAS_USERNAME, NAS_SHARES
 sudo ./setup.sh
 ```
 
@@ -65,7 +90,7 @@ What it does, in order:
 3. **T2 repos** (only if `INSTALL_T2_REPO="true"`). See below.
 4. **Plex:** adds the official Plex apt repo and installs `plexmediaserver`
    (this creates the `plex` user the mounts belong to).
-5. **SMB:** creates `$MOUNT_ROOT/<share>`, writes a managed block into
+5. **SMB:** creates the mount folders, writes a managed block into
    `/etc/fstab`, and brings the mounts up.
 6. **Plex service:** installs the systemd override and enables and starts Plex.
 7. **Verify:** checks that Plex is active, the mounts are present, and
@@ -81,13 +106,15 @@ change. Mount directories of removed shares are left in place (empty).
 From your desktop:
 
 ```bash
-ssh -L 8888:localhost:32400 simun@kamino.local
+ssh -L 8888:localhost:32400 <user>@kamino.local
 ```
 
 Then open <http://localhost:8888/web>, sign in, and claim the server. Plex only
 allows the unclaimed setup from localhost, which is why you need the tunnel. Add
-libraries pointing at `/mnt/nas/<share>` (e.g. `/mnt/nas/movies`). After that
-the server is reachable normally at `http://kamino.local:32400/web`.
+libraries pointing at the mount folders, e.g. `/mnt/nas/movie-library`,
+`/mnt/nas/tv-library`, `/mnt/nas/music-library` (`setup.sh` prints the list at
+the end). After that the server is reachable normally at
+`http://kamino.local:32400/web`.
 
 ## How it works
 
@@ -108,9 +135,13 @@ Signed-By*. Plex updates then come with `apt upgrade`.
 ### Managed fstab block
 ```
 # BEGIN kamino-nas (managed by dotfiles/kamino/setup.sh)
-//192.168.1.9/movies  /mnt/nas/movies  cifs  credentials=/etc/kamino-nas.credentials,uid=plex,gid=plex,file_mode=0644,dir_mode=0755,iocharset=utf8,_netdev,nofail,x-systemd.automount,x-systemd.mount-timeout=30  0 0
+//<NAS_IP>/Data  /mnt/nas/data  cifs  credentials=/etc/kamino-nas.credentials,uid=plex,gid=plex,file_mode=0644,dir_mode=0755,iocharset=utf8,_netdev,nofail,x-systemd.automount,x-systemd.mount-timeout=30  0 0
+//<NAS_IP>/Movie\040Library  /mnt/nas/movie-library  cifs  credentials=…  0 0
 # END kamino-nas
 ```
+- Spaces in share names are written as `\040`, fstab's escape for a space,
+  because fstab separates its fields with whitespace. `mount` and systemd read
+  it back as `Movie Library`.
 - On every run the whole block is replaced, never appended. If it's already
   correct, fstab isn't touched.
 - The original fstab is backed up **once** to `/etc/fstab.kamino.bak` before
@@ -139,7 +170,7 @@ After=network-online.target remote-fs.target
 StartLimitIntervalSec=0
 
 [Service]
-ExecStartPre=+/bin/sh -c '…every /mnt/nas/<share> must be a real SMB (cifs) mount, else exit 1…'
+ExecStartPre=+/bin/sh -c '…every mount folder must be a real SMB (cifs) mount, else exit 1…'
 Restart=always
 RestartSec=10
 ```
@@ -183,14 +214,14 @@ Don't combine `linux-t2` with the `apple-bce` / `applesmc-t2` / `apfs-dkms`
 packages. After a release upgrade, re-run `setup.sh` so the release repo
 follows the new codename.
 
-## Why an IP and not `geonosis.local`
-geonosis is only reachable by name through mDNS, and `geonosis.local` resolves
-to an **IPv6 link-local** address first. That's unreliable for a boot-time
-mount, and mDNS also has to be ready at boot. If you still want the name, set
-`NAS_HOST="geonosis.local"`. Not recommended.
+## Why an IP and not `<nas-name>.local`
+A Synology without a DNS entry on the router is only reachable by name through
+mDNS, and `<nas-name>.local` resolves to an **IPv6 link-local** address first.
+That's unreliable for a boot-time mount, and mDNS also has to be ready at boot.
+If you still want the name, set `NAS_HOST="<nas-name>.local"`. Not recommended.
 
 ## Why SMB and not NFS
-The original spec used NFS. geonosis has NFS turned off, and enabling it needs
+The original spec used NFS. The NAS has NFS turned off, and enabling it needs
 per-share permission rules in DSM. SMB is already on and is what the old Mac
 used, so kamino uses it too. The cost: kamino has to store a Synology password
 (root-only file; see the dedicated read-only user tip in section 1).
@@ -201,9 +232,9 @@ used, so kamino uses it too. The cost: kamino has to store a Synology password
 systemctl status plexmediaserver                     # "activating (auto-restart)" = waiting for NAS
 journalctl -u plexmediaserver -b                     # shows "NAS share … not mounted yet" while waiting
 findmnt -t cifs,smb3                                 # what's mounted
-systemctl status mnt-nas-movies.automount mnt-nas-movies.mount
+systemctl status 'mnt-nas-movie\x2dlibrary.automount' 'mnt-nas-movie\x2dlibrary.mount'   # (- is \x2d in unit names)
 journalctl -b -k --grep CIFS                         # kernel SMB errors (login, share name)
-sudo mount -t cifs //192.168.1.9/movies /mnt/test -o credentials=/etc/kamino-nas.credentials   # manual test
+sudo mkdir -p /mnt/test && sudo mount -t cifs "//<NAS_IP>/Movie Library" /mnt/test -o credentials=/etc/kamino-nas.credentials   # manual test (quote names with spaces)
 curl -s http://localhost:32400/identity
 ```
 
@@ -211,7 +242,7 @@ curl -s http://localhost:32400/identity
   password. Fix `NAS_USERNAME` in `config.env`, or run
   `sudo ./setup.sh --reset-credentials`.
 - **`No such file or directory` on mount**: the share name in `NAS_SHARES`
-  doesn't match the Synology folder (check the case).
+  doesn't match the Synology folder (check the case and the spaces).
 - **Plex can't see files**: the Synology account lacks read permission on
   that shared folder (DSM → Shared Folder → Edit → Permissions).
 - **Restore fstab**: `sudo cp /etc/fstab.kamino.bak /etc/fstab && sudo systemctl daemon-reload`.

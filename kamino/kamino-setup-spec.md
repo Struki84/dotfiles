@@ -6,7 +6,7 @@ Write an idempotent setup script that turns a clean Ubuntu Server install on the
 
 - **Machine:** 2018 Mac mini (A1993, T2 chip), headless
 - **OS:** Ubuntu Server 24.04 LTS, OpenSSH installed
-- **Hostname / user:** `kamino` / `simun`, reached as `simun@kamino.local`
+- **Hostname / user:** `kamino` / `<user>`, reached as `<user>@kamino.local`
 - **NAS:** Synology, shares exported over **NFS**
 - **Dotfiles repo:** `github.com/Struki84/dotfiles`, cloned to `~/.dotfiles`
 - **Location for this work:** new folder `~/.dotfiles/kamino/`
@@ -122,7 +122,7 @@ sudo ./setup.sh
 
 **Claim the Plex server (first time, headless):**
 ```bash
-ssh -L 8888:localhost:32400 simun@kamino.local
+ssh -L 8888:localhost:32400 <user>@kamino.local
 ```
 Then open `http://localhost:8888/web` on the desktop and sign in. Add libraries pointing at `/mnt/nas/<share>`.
 

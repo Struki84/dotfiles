@@ -117,13 +117,34 @@ read_fstab_block() {
   ' "$FSTAB_PATH"
 }
 
+# Local folder for a share: "Movie Library" -> "movie-library", "Čarobni" -> "carobni".
+# The locale is pinned so the result never depends on how sudo/ssh set LANG.
+share_folder_name() {
+  local share_name=$1 folder_name
+  if ! folder_name="$(LC_ALL=C.UTF-8 iconv -f UTF-8 -t ASCII//TRANSLIT <<<"$share_name" 2>/dev/null)"; then
+    folder_name=$share_name
+  fi
+  folder_name="${folder_name,,}"
+  LC_ALL=C sed -E 's/[^a-z0-9._-]+/-/g; s/-+/-/g; s/^[-.]+//; s/-+$//' <<<"$folder_name"
+}
+
+# fstab separates fields with whitespace, so spaces in a share name are written
+# as octal escapes (\040); mount and systemd decode them back.
+fstab_escape() {
+  local field=$1
+  field="${field//\\/\\134}"
+  field="${field// /\\040}"
+  printf '%s' "${field//$'\t'/\\011}"
+}
+
 build_fstab_block() {
-  local share_name mount_options
+  local share_index mount_options
   mount_options="$(full_mount_options)"
   printf '%s\n' "$FSTAB_BLOCK_BEGIN"
-  for share_name in "${NAS_SHARE_LIST[@]}"; do
-    printf '//%s/%s  %s/%s  cifs  %s  0 0\n' \
-      "$NAS_HOST" "$share_name" "$MOUNT_ROOT" "$share_name" "$mount_options"
+  for share_index in "${!NAS_SHARE_LIST[@]}"; do
+    printf '//%s/%s  %s  cifs  %s  0 0\n' \
+      "$NAS_HOST" "$(fstab_escape "${NAS_SHARE_LIST[share_index]}")" \
+      "${MOUNT_POINTS[share_index]}" "$mount_options"
   done
   printf '%s' "$FSTAB_BLOCK_END"
 }
@@ -227,7 +248,7 @@ preflight() {
   source "$CONFIG_FILE"
 
   local required_setting
-  for required_setting in HOSTNAME_TARGET NAS_HOST NAS_USERNAME NAS_SHARES \
+  for required_setting in HOSTNAME_TARGET NAS_HOST NAS_USERNAME \
     MOUNT_ROOT NAS_MOUNT_OPTIONS INSTALL_T2_REPO; do
     [[ -n ${!required_setting:-} ]] || die "$required_setting is not set in $CONFIG_FILE"
   done
@@ -240,14 +261,7 @@ preflight() {
   [[ $MOUNT_ROOT =~ ^/[A-Za-z0-9._/-]+$ ]] ||
     die "MOUNT_ROOT must be an absolute path without spaces (got '$MOUNT_ROOT')"
 
-  read -r -a NAS_SHARE_LIST <<<"$NAS_SHARES"
-  [[ ${#NAS_SHARE_LIST[@]} -gt 0 ]] || die "NAS_SHARES is empty in $CONFIG_FILE"
-  local share_name
-  for share_name in "${NAS_SHARE_LIST[@]}"; do
-    [[ $share_name =~ ^[A-Za-z0-9._-]+$ ]] ||
-      die "Share name '$share_name' in NAS_SHARES may only use letters, digits, . _ - (no spaces)"
-    MOUNT_POINTS+=("$MOUNT_ROOT/$share_name")
-  done
+  parse_shares
 
   if [[ ! $NAS_HOST =~ ^[0-9]{1,3}(\.[0-9]{1,3}){3}$ ]]; then
     warn "NAS_HOST '$NAS_HOST' is not an IPv4 address; an IP is more reliable at boot (see README)."
@@ -259,10 +273,43 @@ preflight() {
   fi
 
   info "config: $CONFIG_FILE"
-  info "shares: ${NAS_SHARE_LIST[*]} -> $MOUNT_ROOT/<share> (SMB as $NAS_USERNAME)"
+  info "shares (SMB as $NAS_USERNAME):"
+  local share_index
+  for share_index in "${!NAS_SHARE_LIST[@]}"; do
+    info "  //$NAS_HOST/${NAS_SHARE_LIST[share_index]}  ->  ${MOUNT_POINTS[share_index]}"
+  done
 
   # Ask for the password now, so the rest of the run needs no one at the keyboard.
   ensure_credentials
+}
+
+# NAS_SHARES is a bash array of exact Synology share names (spaces allowed).
+# Fills NAS_SHARE_LIST and MOUNT_POINTS (same order).
+parse_shares() {
+  if [[ "$(declare -p NAS_SHARES 2>/dev/null)" != "declare -a"* ]]; then
+    die "NAS_SHARES must be a bash array, one quoted name per share, e.g.
+  NAS_SHARES=(\"Data\" \"Movie Library\" \"TV Library\")"
+  fi
+  NAS_SHARE_LIST=("${NAS_SHARES[@]}")
+  MOUNT_POINTS=()
+  [[ ${#NAS_SHARE_LIST[@]} -gt 0 ]] || die "NAS_SHARES is empty in $CONFIG_FILE"
+
+  local share_name folder_name
+  local -A share_for_folder=()
+  for share_name in "${NAS_SHARE_LIST[@]}"; do
+    [[ -n $share_name && $share_name != " "* && $share_name != *" " ]] ||
+      die "Share name '$share_name' is empty or has leading/trailing spaces"
+    [[ $share_name != *[/\\,\"[:cntrl:]]* ]] ||
+      die "Share name '$share_name' contains a character setup.sh can't mount (/ \\ , \" or a control character)"
+
+    folder_name="$(share_folder_name "$share_name")"
+    [[ -n $folder_name ]] ||
+      die "Share name '$share_name' gives an empty folder name; rename the share or use letters/digits"
+    [[ -z ${share_for_folder[$folder_name]:-} ]] ||
+      die "Shares '${share_for_folder[$folder_name]}' and '$share_name' would both mount at $MOUNT_ROOT/$folder_name"
+    share_for_folder[$folder_name]=$share_name
+    MOUNT_POINTS+=("$MOUNT_ROOT/$folder_name")
+  done
 }
 
 # 2. BASE PACKAGES AND HOSTNAME -----------------------------------------------
@@ -484,9 +531,10 @@ verify() {
   cat <<EOF
 
 Next step (first time only) - claim the server from your desktop:
-  ssh -L 8888:localhost:32400 ${SUDO_USER:-simun}@$HOSTNAME_TARGET.local
-  then open http://localhost:8888/web, sign in, and add libraries at $MOUNT_ROOT/<share>.
+  ssh -L 8888:localhost:32400 ${SUDO_USER:-<user>}@$HOSTNAME_TARGET.local
+  then open http://localhost:8888/web, sign in, and add libraries:
 EOF
+  for mount_point in "${MOUNT_POINTS[@]}"; do printf '    %s\n' "$mount_point"; done
 
   if [[ ${#FAILED_CHECKS[@]} -gt 0 ]]; then
     printf '\n⚠ %d check(s) failed. See README.md -> Troubleshooting.\n' "${#FAILED_CHECKS[@]}"

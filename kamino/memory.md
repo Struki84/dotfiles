@@ -36,19 +36,21 @@ it, what was built, and why. Read this first when picking the work back up.
    | T2: install packages too? | **Repos only**; packages are manual, documented in the README |
 
 4. **"So I need to create the env file?"** Not now. The example is committed.
-   On kamino you run `cp config.env.example config.env` and set the NAS IP. If
+   On kamino you run `cp config.env.example config.env` and fill in the NAS IP
+   and username. If
    you forget, the script copies it for you and exits. Because it's gitignored,
    creating it on the laptop wouldn't reach kamino.
 
-5. **"My NAS runs as hostname `geonosis`, do I still need an IP?"** Checked from
-   the laptop: `geonosis` and `geonosis.lan` don't resolve (the router's DNS
-   doesn't know it). `geonosis.local` resolves only via mDNS, and to an **IPv6
-   link-local** address (`fe80::9209:d0ff:fe21:bcb5`) first. IPv4 is
-   **`192.168.1.9`**. Recommendation: use the IP plus a DHCP reservation.
+5. **"My NAS runs under its own hostname, do I still need an IP?"** Checked
+   from the laptop: the bare name and `<name>.lan` don't resolve (the router's
+   DNS doesn't know it). `<name>.local` resolves only via mDNS, and to an
+   **IPv6 link-local** address first; the IPv4 address appears only when asked
+   for explicitly. Recommendation: use the IPv4 address plus a DHCP
+   reservation.
 
 6. **"OK so we can write the scripts now?"** The session was still in plan mode.
-   Proposed defaults: `NAS_HOST="192.168.1.9"` in the example, a warn-only
-   preflight NAS check, no shellcheck install.
+   Proposed defaults: the NAS IP in the example (later removed, see item 11), a
+   warn-only preflight NAS check, no shellcheck install.
 
 7. **"lgtm, build it."** Built everything below.
 
@@ -70,16 +72,16 @@ it, what was built, and why. Read this first when picking the work back up.
 
 9. **"I won't do the Synology NFS step; I didn't need it with my current setup
    (Plex on old macOS with the same drives mounted permanently)."** Probed
-   geonosis from the laptop: **NFS 2049 and rpcbind 111 closed, SMB 445 and
+   the NAS from the laptop: **NFS 2049 and rpcbind 111 closed, SMB 445 and
    AFP 548 open**, so the Mac mounts over SMB/AFP and NFS would never have
    worked. Anonymous `smbclient -L` is refused (`LOGON_FAILURE`), so the share
    names couldn't be listed. Offered: enable NFS in DSM (recommended), switch
    to SMB, or support both. **User chose: switch to SMB, like the Mac.**
    **Changed:**
    - `cifs-utils` instead of `nfs-common`; fstab entries
-     `//192.168.1.9/<share> … cifs credentials=/etc/kamino-nas.credentials,uid=plex,gid=plex,<NAS_MOUNT_OPTIONS>`.
+     `//<NAS_IP>/<share> … cifs credentials=/etc/kamino-nas.credentials,uid=plex,gid=plex,<NAS_MOUNT_OPTIONS>`.
    - Config: `NAS_EXPORT_ROOT` and `NFS_MOUNT_OPTIONS` removed; added
-     `NAS_USERNAME` (default `simun`, an assumption) and `NAS_MOUNT_OPTIONS`.
+     `NAS_USERNAME` and `NAS_MOUNT_OPTIONS`.
    - The password is never in git or config. Preflight asks for it once (twice
      to confirm, hidden, from `/dev/tty`) and writes it root-only (mode 600) to
      `/etc/kamino-nas.credentials`. It's reused on later runs (unattended),
@@ -91,13 +93,61 @@ it, what was built, and why. Read this first when picking the work back up.
      `NAS_MOUNT_OPTIONS` (setup.sh owns those) and checks that the `plex` user
      exists before writing mounts.
 
+   *The user then committed and pushed (commit `1d53a2b`, "Added supermaven,
+   and config for a new server") and asked for the clone command:
+   `git clone https://github.com/Struki84/dotfiles.git ~/.dotfiles`.*
+
+10. **"I have share names with two words in the name, how would I config
+    that?"** Not possible before: `NAS_SHARES` was split on spaces and names
+    were validated without spaces. The real shares are **`Data`,
+    `Movie Library`, `TV Library`, `Music Library`**. Folder naming chosen by
+    the user: **auto lowercase-dashes**. `Data` is **included**, so Plex waits
+    for it too.
+    **Changed:**
+    - `NAS_SHARES` is now a bash array:
+      `NAS_SHARES=("Data" "Movie Library" "TV Library" "Music Library")`.
+      A plain string stops the script with a format example.
+    - `share_folder_name()`: `iconv ASCII//TRANSLIT` (locale pinned to
+      `C.UTF-8`, because under `LC_ALL=C` "Č" turned into "-" and the folder
+      name changed depending on locale), lowercase, anything outside
+      `[a-z0-9._-]` becomes `-`, dashes collapsed, leading `-`/`.` and trailing
+      `-` trimmed. So `Movie Library` → `/mnt/nas/movie-library`.
+    - `parse_shares()` (split out of preflight so it can be tested): rejects
+      empty names, leading/trailing spaces, `/ \ , "` and control characters,
+      empty folder names, and two shares mapping to the same folder.
+    - `fstab_escape()`: `\` → `\134`, space → `\040`, tab → `\011` in the
+      share part. The mount points never contain spaces, so the override,
+      unit names and verify are unchanged.
+    - Verified: `findmnt -F` reads `Movie\040Library` back as
+      `Movie Library`; systemd's own `systemd-fstab-generator` produces
+      `What=//…/Movie Library`, `Where=/mnt/nas/movie-library`, and the unit
+      names (`mnt-nas-movie\x2dlibrary.automount`) match `systemd-escape`.
+
+11. **"The username and IP address cannot be in the repo."** They were
+    already pushed: `1d53a2b` is on GitHub and the repo is **public**. It
+    contained the NAS IP, the NAS username default, the NAS's IPv6 link-local
+    address (which encodes its MAC), the NAS hostname and the kamino SSH
+    login. Offered: clean the files only, or also rewrite history
+    (`git filter-repo`, force-push). **User chose: clean the files only; the
+    history stays as is.** Practical risk is low (private LAN IP, not
+    reachable from the internet), and a rewrite is still possible later.
+    Values removed going forward: NAS IP, NAS username, IPv6/MAC, NAS
+    hostname, kamino SSH login. Share names and `kamino` are kept.
+    **Changed:**
+    - `config.env.example`: `NAS_HOST="192.168.1.XXX"` (setup.sh already
+      refuses `XXX`) and `NAS_USERNAME=""` (setup.sh stops: "not set").
+    - Docs use `<NAS_IP>`, `<user>`, `<nas-name>.local`; the spec's SSH
+      login became `<user>@kamino.local`; the setup.sh claim
+      hint falls back to `<user>` (the real `$SUDO_USER` is used at runtime).
+    - The real values live only in `config.env` on kamino (gitignored).
+
 ## What was built
 
 ```
 kamino/
 ├── kamino-setup-spec.md       # the original spec (input)
 ├── setup.sh                   # main entry, sudo ./setup.sh
-├── config.env.example         # NAS_HOST=192.168.1.9 (geonosis), NAS_USERNAME, shares movies/tv/music
+├── config.env.example         # placeholders: NAS_HOST=192.168.1.XXX, NAS_USERNAME="", real share names
 ├── systemd/plexmediaserver.service.d/override.conf
 ├── README.md                  # prerequisites, run, claim, internals, troubleshooting
 └── memory.md                  # this file
@@ -116,8 +166,9 @@ without running anything (`BASH_SOURCE` guard), which is how it was tested.
 
 1. `preflight`: checks root and Ubuntu (`/etc/os-release`). Copies the example
    config and exits if `config.env` is missing. Validates the settings (no
-   `XXX` placeholder, share names `[A-Za-z0-9._-]`, `MOUNT_ROOT` an absolute
-   path without spaces, no credential options in `NAS_MOUNT_OPTIONS`). Warns
+   `XXX` placeholder, `MOUNT_ROOT` an absolute path without spaces, no
+   credential options in `NAS_MOUNT_OPTIONS`), then `parse_shares` (array,
+   names, folder mapping; see chat item 10) and prints share → folder. Warns
    if `NAS_HOST` isn't IPv4 or port 445 doesn't answer (bash `/dev/tcp`, no
    extra tools). Ends with `ensure_credentials`, so the only prompt comes
    before anything slow.
@@ -156,7 +207,7 @@ without running anything (`BASH_SOURCE` guard), which is how it was tested.
    if anything failed.
 
 ### Deviations from the spec (on purpose)
-- **SMB instead of NFS:** geonosis has NFS off and the user doesn't want NAS
+- **SMB instead of NFS:** the NAS has NFS off and the user doesn't want NAS
   changes (chat item 9). Needs a stored password: root-only
   `/etc/kamino-nas.credentials`.
 - **Plex paths:** current Plex docs instead of the spec's (user decision; the
@@ -215,19 +266,30 @@ items.
   with no terminal it stops with a clear message. (That last check found and
   fixed a bug: `[[ -r /dev/tty ]]` is true even without a terminal, so it now
   actually opens `/dev/tty`.)
+- After the spaces change: folder names checked for a table of inputs
+  (including accents, apostrophes, brackets and leading dots) and are the same
+  under `C`, `POSIX`, `C.UTF-8` and `en_US.UTF-8`. `parse_shares` error cases
+  (string instead of array, empty, collision, `/`, leading space) all stop
+  with a clear message. The fstab block with escaped spaces is idempotent and
+  parsed correctly by `findmnt -F` and `systemd-fstab-generator`. Tests use the
+  documentation IP `192.0.2.10`, not the real one.
+- Leak check: a case-insensitive search of `kamino/` for the real NAS IP,
+  IPv6, NAS hostname and username finds nothing.
 
 **Not yet tested:** a real run on kamino (systemd, apt, SMB mount, Plex).
 
 ## Open items / next steps
-- [ ] Confirm the exact Synology share names (case-sensitive) and the Synology
-      username the Mac uses, and set `NAS_SHARES` / `NAS_USERNAME` in
-      `config.env` on kamino. The defaults `movies tv music` / `simun` are guesses.
+- [ ] On kamino, in `config.env` (gitignored): set `NAS_HOST` (real IP) and
+      `NAS_USERNAME` (the Synology account the Mac uses). `NAS_SHARES` already
+      holds the real share names; double-check case and spaces.
 - [ ] Optional: a dedicated read-only Synology user for kamino, instead of the
       main account.
-- [ ] Router: DHCP reservation for geonosis (`192.168.1.9`), and ideally for kamino.
+- [ ] Router: DHCP reservation for the NAS, and ideally for kamino.
 - [ ] On kamino: clone, `cp config.env.example config.env`, `sudo ./setup.sh`,
       then run it **again** to confirm the second run changes nothing.
-- [ ] Claim Plex through the SSH tunnel and add libraries at `/mnt/nas/<share>`.
+- [ ] Claim Plex through the SSH tunnel and add libraries at
+      `/mnt/nas/movie-library`, `/mnt/nas/tv-library`, `/mnt/nas/music-library`
+      (and `/mnt/nas/data` if wanted).
 - [ ] Optional: install shellcheck and lint `setup.sh`.
 - [ ] In Plex: untick *Settings → Library → Empty trash automatically after
       every scan* (protects the library during NAS outages).
@@ -238,5 +300,8 @@ items.
       timer that restarts Plex if `/identity` stops answering (hang), sysctl
       `kernel.panic=10` (auto-reboot on kernel panic), and power-on after
       power loss on the Mac mini.
-- [ ] Not committed yet. The repo also has unrelated uncommitted changes in
-      `omarchy/` and `quattro/`; commit `kamino/` + `.gitignore` separately.
+- [ ] Commit the spaces + privacy changes (the user commits). The repo may
+      still have unrelated uncommitted changes elsewhere; stage `kamino/`
+      only.
+- [ ] Optional, later: scrub the old values from git history
+      (`git filter-repo --replace-text`, then a force-push). Declined for now.
