@@ -41,7 +41,7 @@ o.bind("ALT + 2", "Terminal", { focus = "Alacritty", launch = "alacritty" })
 -- 	"Terminal",
 -- 	{ focus = "Alacritty", launch = "omarchy-launch-terminal bash -c 'tmux attach || tmux new -s Dev'" }
 -- )
-o.bind("ALT + 3", "Ferdium", { focus = "Ferdium", launch = "ferdium" })
+o.bind("ALT + 3", "Ferdium", { focus = "Vesktop", launch = "vesktop" })
 o.bind("ALT + 4", "Notion", { focus = "Notion", launch = "notion-app" })
 
 -- Close window.

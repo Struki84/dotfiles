@@ -3,9 +3,9 @@ return {
   event = "InsertEnter",
   opts = {
     keymaps = {
-      accept_suggestion = "<M-k>",
-      clear_suggestion = "<M-j>",
-      accept_word = "<M-w>",
+      accept_suggestion = "<C-l>",
+      clear_suggestion = "<C-h>",
+      accept_word = "<C-k>",
     },
     ignore_filetypes = { "TelescopePrompt", "snacks_input" },
     log_level = "warn",
