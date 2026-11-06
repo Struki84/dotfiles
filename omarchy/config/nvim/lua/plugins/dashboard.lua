@@ -20,7 +20,8 @@ return {
       },
     },
     notifier = {
-      top_down = true, -- newest on top; snacks notifier sits top-right by default
+      top_down = false,
+      margin = { top = 0, right = 1, bottom = 0 },
     },
   },
 }
