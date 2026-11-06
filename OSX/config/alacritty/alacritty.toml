@@ -41,3 +41,17 @@ size = 12               # Default to macOS font size; see notes for Linux
 [font.normal]
 family = "JetBrainsMono Nerd Font"
 style = "Regular"
+
+[keyboard]
+
+bindings = [
+  # Supermaven (insert mode)
+  { key = "h", mods = "Command", chars = "\u001bk" },        # Cmd+K       → <M-k> accept suggestion
+  { key = "l", mods = "Command", chars = "\u001bj" },        # Cmd+J       → <M-j> clear suggestion
+
+  # Navigation (normal + visual)
+  { key = "J", mods = "Command|Shift", chars = "\u001bJ" },  # Cmd+Shift+J → <M-J> half page down
+  { key = "K", mods = "Command|Shift", chars = "\u001bK" },  # Cmd+Shift+K → <M-K> half page up
+  { key = "H", mods = "Command|Shift", chars = "\u001bH" },  # Cmd+Shift+H → <M-H> line start
+  { key = "L", mods = "Command|Shift", chars = "\u001bL" },  # Cmd+Shift+L → <M-L> line end
+]
