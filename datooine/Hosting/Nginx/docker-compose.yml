@@ -1,0 +1,33 @@
+version: '2'
+
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: main.nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ~/Hosting/WebSite/html:/etc/nginx/html
+      - conf:/etc/nginx/conf.d
+      - vhost:/etc/nginx/vhost.d
+      - dhparam:/etc/nginx/dhparam
+      - certs:/etc/nginx/certs:ro
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - bridge
+      - soulseek
+
+volumes:
+  conf:
+  vhost:
+  html:
+  certs:
+  dhparam:
+
+networks:
+  bridge:
+    driver: bridge
+  soulseek: 
+    driver: bridge
+  

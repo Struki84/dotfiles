@@ -1,0 +1,89 @@
+version: '3.5'
+services:
+  gitlab:
+    image: gitlab/gitlab-ce
+    restart: always
+    container_name: gitlab
+    hostname: gitlab_strukan
+    environment:
+      - TZ=Europe/Berlin
+      - VIRTUAL_HOST=gitlab.strukan.me
+      - VIRTUAL_PORT=443
+    ports:
+      - 224:22
+    volumes:
+      - './volumes/config:/etc/gitlab'
+      - './volumes/logs:/var/log/gitlab'
+      - './volumes/data:/var/opt/gitlab'
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - default
+      - nginx_proxy
+
+  pages:
+    image: gitlab/gitlab-ce
+    restart: always
+    container_name: gitlab_pages
+    hostname: strukan_pages
+    environment:
+      - TZ=Europe/Berlin
+      - VIRTUAL_HOST=strukan_pages,*.strukan_pages
+      - VIRTUAL_PORT=8090
+      - HTTPS_METHOD=nohttps
+      # - LETSENCRYPT_HOST=${PAGES_HOST}
+      # - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
+    expose:
+      - 8090/tcp
+    entrypoint:
+      - /opt/gitlab/embedded/bin/gitlab-pages
+    command:
+      - -listen-proxy
+      - "0.0.0.0:8090"
+      - -pages-domain
+      - "strukan_pages"
+      - -pages-root
+      - "/var/opt/gitlab/gitlab-rails/shared/pages"
+    volumes:
+      - './volumes/data/gitlab-pages:/var/opt/gitlab/gitlab-pages:rw'
+      - './volumes/data/gitlab-rails/shared/pages:/var/opt/gitlab/gitlab-rails/shared/pages:ro'
+    networks:
+      - nginx_proxy
+
+  runner:
+    image: gitlab/gitlab-runner
+    restart: always
+    container_name: gitlab_runner
+    environment:
+      - CI_SERVER_URL=https://strukan_gitlab/
+    volumes:
+      - /var/lib/docker/mounts/runner:/etc/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+
+  postgres:
+    image: postgres
+    restart: always
+    container_name: gitlab_postgresql
+    # https://github.com/docker-library/docs/tree/master/postgres#environment-variables
+    environment:
+      - POSTGRES_USER=gitlab
+      - POSTGRES_DB=gitlabhq_production
+    volumes:
+      - ./volumes/postgres:/var/lib/postgresql/data
+    restart: always
+
+  redis:
+    image: redis
+    restart: always
+    container_name: gitlab_redis
+    command:
+      - --loglevel warning
+    volumes:
+      - ./volumes/redis:/var/lib/redis
+    restart: always
+
+networks:
+  nginx_proxy:
+    external:
+      name: nginx_gitlab
